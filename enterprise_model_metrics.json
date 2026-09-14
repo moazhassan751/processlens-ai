@@ -1,0 +1,77 @@
+{
+  "dataset": {
+    "total_cases": 300,
+    "train_cases": 240,
+    "test_cases": 60,
+    "total_prefix_rows": 654,
+    "train_rows": 524,
+    "test_rows": 130,
+    "late_threshold_hours": 43.09
+  },
+  "models": {
+    "random_forest": {
+      "cv_roc_auc_mean": 0.8189,
+      "cv_roc_auc_std": 0.0171,
+      "cv_pr_auc_mean": 0.6402,
+      "test_roc_auc": 0.8259,
+      "test_pr_auc": 0.633,
+      "optimal_threshold": 0.37
+    },
+    "lightgbm": {
+      "cv_roc_auc_mean": 0.7825,
+      "cv_roc_auc_std": 0.01,
+      "cv_pr_auc_mean": 0.6014,
+      "test_roc_auc": 0.7918,
+      "test_pr_auc": 0.5972,
+      "optimal_threshold": 0.1
+    }
+  },
+  "winning_model": "RandomForestClassifier",
+  "fold_details": [
+    {
+      "fold": 1,
+      "val_cases": 48,
+      "val_rows": 107,
+      "rf_roc_auc": 0.7896,
+      "rf_pr_auc": 0.6435,
+      "lgb_roc_auc": 0.7858,
+      "lgb_pr_auc": 0.6674
+    },
+    {
+      "fold": 2,
+      "val_cases": 48,
+      "val_rows": 106,
+      "rf_roc_auc": 0.8143,
+      "rf_pr_auc": 0.6092,
+      "lgb_roc_auc": 0.7936,
+      "lgb_pr_auc": 0.5289
+    },
+    {
+      "fold": 3,
+      "val_cases": 48,
+      "val_rows": 103,
+      "rf_roc_auc": 0.8192,
+      "rf_pr_auc": 0.6067,
+      "lgb_roc_auc": 0.768,
+      "lgb_pr_auc": 0.5481
+    },
+    {
+      "fold": 4,
+      "val_cases": 48,
+      "val_rows": 102,
+      "rf_roc_auc": 0.833,
+      "rf_pr_auc": 0.7369,
+      "lgb_roc_auc": 0.7737,
+      "lgb_pr_auc": 0.6717
+    },
+    {
+      "fold": 5,
+      "val_cases": 48,
+      "val_rows": 106,
+      "rf_roc_auc": 0.8384,
+      "rf_pr_auc": 0.6048,
+      "lgb_roc_auc": 0.7912,
+      "lgb_pr_auc": 0.591
+    }
+  ]
+}
