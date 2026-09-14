@@ -1,0 +1,1470 @@
+[
+  {
+    "case_id": "OPEN-0001",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.1312,
+    "predicted_label": "On Track",
+    "risk_label": "On Track",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 2.0836,
+    "risk_drivers": [
+      "resource_at_submitted",
+      "resource_at_reviewed"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": -0.0148
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0233
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": 0.0089
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": -0.0046
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0104
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": -0.0217
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0091
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0189
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": 0.0023
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0162
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": -0.0205
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": -0.0115
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.0118
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": -0.0026
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": 0.0436
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "Case is on track with low risk contribution across resource_at_submitted and resource_at_reviewed.",
+    "prescriptive_action": {
+      "action_title": "Maintain Standard Routing",
+      "action_category": "STANDARD_OPS",
+      "current_risk": 0.131,
+      "projected_risk": 0.131,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "HIGH",
+      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+    }
+  },
+  {
+    "case_id": "OPEN-0002",
+    "current_step": "Submitted",
+    "late_risk_probability": null,
+    "predicted_label": "Insufficient Data",
+    "risk_label": "Insufficient Data",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 0.0,
+    "risk_drivers": [],
+    "feature_contributions": [],
+    "base_value": null,
+    "explanation": "Awaiting subsequent process milestones to evaluate delay risk.",
+    "prescriptive_action": {
+      "action_title": "Awaiting Milestone",
+      "action_category": "MONITORING",
+      "current_risk": 0.0,
+      "projected_risk": 0.0,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "LOW",
+      "guidance": "Wait for subsequent process events before selecting an intervention."
+    }
+  },
+  {
+    "case_id": "OPEN-0003",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.1046,
+    "predicted_label": "On Track",
+    "risk_label": "On Track",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 2.7436,
+    "risk_drivers": [
+      "hour_of_day_at_snapshot",
+      "hour_of_day_submitted"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": -0.0099
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0193
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": -0.0165
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": 0.0115
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0112
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": -0.0076
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0117
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0162
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": 0.0011
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0135
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": 0.0156
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": -0.0137
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.0206
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": -0.0001
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": -0.0251
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "Case is on track with low risk contribution across hour_of_day_at_snapshot and hour_of_day_submitted.",
+    "prescriptive_action": {
+      "action_title": "Maintain Standard Routing",
+      "action_category": "STANDARD_OPS",
+      "current_risk": 0.105,
+      "projected_risk": 0.105,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "HIGH",
+      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+    }
+  },
+  {
+    "case_id": "OPEN-0004",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.6432,
+    "predicted_label": "Late Risk",
+    "risk_label": "Late Risk",
+    "risk_threshold": 0.19,
+    "anomaly_flag": true,
+    "elapsed_hours_so_far": 5.2414,
+    "risk_drivers": [
+      "total_wait_hours_so_far",
+      "time_since_previous_activity"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": 0.0611
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": 0.0622
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": 0.0083
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": 0.0086
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": 0.0742
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": 0.0611
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": 0.0711
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": 0.0456
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": 0.0015
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": 0.0736
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": -0.0068
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": -0.0237
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.0085
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": -0.0039
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": -0.023
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "This case is flagged mainly because of total_wait_hours_so_far and time_since_previous_activity.",
+    "prescriptive_action": {
+      "action_title": "Expedite Approval Step",
+      "action_category": "QUEUE_PRIORITY",
+      "current_risk": 0.643,
+      "projected_risk": 0.421,
+      "risk_reduction_pct": 22.2,
+      "feasibility": "HIGH",
+      "guidance": "Fast-track next approval queue. Cutting wait time to <=1h reduces late risk by 22.2%."
+    }
+  },
+  {
+    "case_id": "OPEN-0005",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.1968,
+    "predicted_label": "Late Risk",
+    "risk_label": "Late Risk",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 3.4386,
+    "risk_drivers": [
+      "hour_of_day_at_snapshot",
+      "elapsed_hours_so_far"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": 0.0048
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0086
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": -0.0134
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": -0.0226
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0009
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": 0.0037
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": 0.0032
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0006
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": 0.0004
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": 0.0012
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": 0.0311
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": -0.0091
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.012
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": -0.0013
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": -0.021
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "This case is flagged mainly because of hour_of_day_at_snapshot and elapsed_hours_so_far.",
+    "prescriptive_action": {
+      "action_title": "Expedite Approval Step",
+      "action_category": "QUEUE_PRIORITY",
+      "current_risk": 0.197,
+      "projected_risk": 0.128,
+      "risk_reduction_pct": 6.9,
+      "feasibility": "HIGH",
+      "guidance": "Fast-track next approval queue. Cutting wait time to <=1h reduces late risk by 6.9%."
+    }
+  },
+  {
+    "case_id": "OPEN-0006",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.2687,
+    "predicted_label": "Late Risk",
+    "risk_label": "Late Risk",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 2.0597,
+    "risk_drivers": [
+      "resource_at_submitted",
+      "day_of_week_at_snapshot"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": -0.0127
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0118
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": -0.0196
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": 0.0063
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0029
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": -0.0211
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0006
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0116
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": 0.0042
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0099
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": 0.0012
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": 0.0088
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": 0.0138
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": -0.0011
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": 0.0839
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "This case is flagged mainly because of resource_at_submitted and day_of_week_at_snapshot.",
+    "prescriptive_action": {
+      "action_title": "Reassign to Priority Pool",
+      "action_category": "LOAD_BALANCING",
+      "current_risk": 0.269,
+      "projected_risk": 0.051,
+      "risk_reduction_pct": 21.7,
+      "feasibility": "HIGH",
+      "guidance": "Reassign subsequent steps to high-velocity resource pool to avoid queue congestion (-21.7% Risk)."
+    }
+  },
+  {
+    "case_id": "OPEN-0007",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.1732,
+    "predicted_label": "On Track",
+    "risk_label": "On Track",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 1.7539,
+    "risk_drivers": [
+      "resource_at_submitted",
+      "resource_at_reviewed"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": -0.0207
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0244
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": 0.0153
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": -0.0064
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0197
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": -0.018
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0234
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0148
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": 0.004
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0189
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": 0.0106
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": -0.0053
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.0038
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": -0.0013
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": 0.0583
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "Case is on track with low risk contribution across resource_at_submitted and resource_at_reviewed.",
+    "prescriptive_action": {
+      "action_title": "Maintain Standard Routing",
+      "action_category": "STANDARD_OPS",
+      "current_risk": 0.173,
+      "projected_risk": 0.173,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "HIGH",
+      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+    }
+  },
+  {
+    "case_id": "OPEN-0008",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.0365,
+    "predicted_label": "On Track",
+    "risk_label": "On Track",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 1.5411,
+    "risk_drivers": [
+      "resource_at_reviewed",
+      "day_of_week_at_snapshot"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": -0.0269
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0391
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": 0.02
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": -0.0176
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0278
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": -0.0216
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0224
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0265
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": -0.0007
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0231
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": -0.0144
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": 0.0031
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": 0.005
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": -0.0028
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": -0.0106
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "Case is on track with low risk contribution across resource_at_reviewed and day_of_week_at_snapshot.",
+    "prescriptive_action": {
+      "action_title": "Maintain Standard Routing",
+      "action_category": "STANDARD_OPS",
+      "current_risk": 0.036,
+      "projected_risk": 0.036,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "HIGH",
+      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+    }
+  },
+  {
+    "case_id": "OPEN-0009",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.1691,
+    "predicted_label": "On Track",
+    "risk_label": "On Track",
+    "risk_threshold": 0.19,
+    "anomaly_flag": true,
+    "elapsed_hours_so_far": 1.1892,
+    "risk_drivers": [
+      "resource_at_submitted",
+      "hour_of_day_at_snapshot"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": -0.022
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0226
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": -0.0042
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": -0.007
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0145
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": -0.0109
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0154
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0073
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": 0.0025
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0169
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": 0.0176
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": 0.0001
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.0017
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": -0.0013
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": 0.0309
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "Case is on track with low risk contribution across resource_at_submitted and hour_of_day_at_snapshot.",
+    "prescriptive_action": {
+      "action_title": "Maintain Standard Routing",
+      "action_category": "STANDARD_OPS",
+      "current_risk": 0.169,
+      "projected_risk": 0.169,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "HIGH",
+      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+    }
+  },
+  {
+    "case_id": "OPEN-0010",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.0206,
+    "predicted_label": "On Track",
+    "risk_label": "On Track",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 3.795,
+    "risk_drivers": [
+      "has_been_reworked_yet",
+      "events_seen_so_far"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": -0.0195
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0309
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": -0.0074
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": -0.0122
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0291
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": -0.015
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0155
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0271
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": -0.0032
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0157
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": -0.0192
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": -0.0031
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.0117
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": -0.001
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": -0.0106
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "Case is on track with low risk contribution across has_been_reworked_yet and events_seen_so_far.",
+    "prescriptive_action": {
+      "action_title": "Maintain Standard Routing",
+      "action_category": "STANDARD_OPS",
+      "current_risk": 0.021,
+      "projected_risk": 0.021,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "HIGH",
+      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+    }
+  },
+  {
+    "case_id": "OPEN-0011",
+    "current_step": "Submitted",
+    "late_risk_probability": null,
+    "predicted_label": "Insufficient Data",
+    "risk_label": "Insufficient Data",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 0.0,
+    "risk_drivers": [],
+    "feature_contributions": [],
+    "base_value": null,
+    "explanation": "Awaiting subsequent process milestones to evaluate delay risk.",
+    "prescriptive_action": {
+      "action_title": "Awaiting Milestone",
+      "action_category": "MONITORING",
+      "current_risk": 0.0,
+      "projected_risk": 0.0,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "LOW",
+      "guidance": "Wait for subsequent process events before selecting an intervention."
+    }
+  },
+  {
+    "case_id": "OPEN-0012",
+    "current_step": "Submitted",
+    "late_risk_probability": null,
+    "predicted_label": "Insufficient Data",
+    "risk_label": "Insufficient Data",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 0.0,
+    "risk_drivers": [],
+    "feature_contributions": [],
+    "base_value": null,
+    "explanation": "Awaiting subsequent process milestones to evaluate delay risk.",
+    "prescriptive_action": {
+      "action_title": "Awaiting Milestone",
+      "action_category": "MONITORING",
+      "current_risk": 0.0,
+      "projected_risk": 0.0,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "LOW",
+      "guidance": "Wait for subsequent process events before selecting an intervention."
+    }
+  },
+  {
+    "case_id": "OPEN-0013",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.0175,
+    "predicted_label": "On Track",
+    "risk_label": "On Track",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 1.5472,
+    "risk_drivers": [
+      "hour_of_day_at_snapshot",
+      "day_of_week_at_snapshot"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": -0.0277
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0397
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": -0.007
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": -0.0099
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0291
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": -0.02
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0321
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0257
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": 0.0005
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0282
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": 0.0068
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": 0.0034
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": 0.0036
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": -0.0025
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": -0.0168
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "Case is on track with low risk contribution across hour_of_day_at_snapshot and day_of_week_at_snapshot.",
+    "prescriptive_action": {
+      "action_title": "Maintain Standard Routing",
+      "action_category": "STANDARD_OPS",
+      "current_risk": 0.018,
+      "projected_risk": 0.018,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "HIGH",
+      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+    }
+  },
+  {
+    "case_id": "OPEN-0014",
+    "current_step": "Submitted",
+    "late_risk_probability": null,
+    "predicted_label": "Insufficient Data",
+    "risk_label": "Insufficient Data",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 0.0,
+    "risk_drivers": [],
+    "feature_contributions": [],
+    "base_value": null,
+    "explanation": "Awaiting subsequent process milestones to evaluate delay risk.",
+    "prescriptive_action": {
+      "action_title": "Awaiting Milestone",
+      "action_category": "MONITORING",
+      "current_risk": 0.0,
+      "projected_risk": 0.0,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "LOW",
+      "guidance": "Wait for subsequent process events before selecting an intervention."
+    }
+  },
+  {
+    "case_id": "OPEN-0015",
+    "current_step": "Submitted",
+    "late_risk_probability": null,
+    "predicted_label": "Insufficient Data",
+    "risk_label": "Insufficient Data",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 0.0,
+    "risk_drivers": [],
+    "feature_contributions": [],
+    "base_value": null,
+    "explanation": "Awaiting subsequent process milestones to evaluate delay risk.",
+    "prescriptive_action": {
+      "action_title": "Awaiting Milestone",
+      "action_category": "MONITORING",
+      "current_risk": 0.0,
+      "projected_risk": 0.0,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "LOW",
+      "guidance": "Wait for subsequent process events before selecting an intervention."
+    }
+  },
+  {
+    "case_id": "OPEN-0016",
+    "current_step": "Submitted",
+    "late_risk_probability": null,
+    "predicted_label": "Insufficient Data",
+    "risk_label": "Insufficient Data",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 0.0,
+    "risk_drivers": [],
+    "feature_contributions": [],
+    "base_value": null,
+    "explanation": "Awaiting subsequent process milestones to evaluate delay risk.",
+    "prescriptive_action": {
+      "action_title": "Awaiting Milestone",
+      "action_category": "MONITORING",
+      "current_risk": 0.0,
+      "projected_risk": 0.0,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "LOW",
+      "guidance": "Wait for subsequent process events before selecting an intervention."
+    }
+  },
+  {
+    "case_id": "OPEN-0017",
+    "current_step": "Submitted",
+    "late_risk_probability": null,
+    "predicted_label": "Insufficient Data",
+    "risk_label": "Insufficient Data",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 0.0,
+    "risk_drivers": [],
+    "feature_contributions": [],
+    "base_value": null,
+    "explanation": "Awaiting subsequent process milestones to evaluate delay risk.",
+    "prescriptive_action": {
+      "action_title": "Awaiting Milestone",
+      "action_category": "MONITORING",
+      "current_risk": 0.0,
+      "projected_risk": 0.0,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "LOW",
+      "guidance": "Wait for subsequent process events before selecting an intervention."
+    }
+  },
+  {
+    "case_id": "OPEN-0018",
+    "current_step": "Submitted",
+    "late_risk_probability": null,
+    "predicted_label": "Insufficient Data",
+    "risk_label": "Insufficient Data",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 0.0,
+    "risk_drivers": [],
+    "feature_contributions": [],
+    "base_value": null,
+    "explanation": "Awaiting subsequent process milestones to evaluate delay risk.",
+    "prescriptive_action": {
+      "action_title": "Awaiting Milestone",
+      "action_category": "MONITORING",
+      "current_risk": 0.0,
+      "projected_risk": 0.0,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "LOW",
+      "guidance": "Wait for subsequent process events before selecting an intervention."
+    }
+  },
+  {
+    "case_id": "OPEN-0019",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.3207,
+    "predicted_label": "Late Risk",
+    "risk_label": "Late Risk",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 2.6744,
+    "risk_drivers": [
+      "hour_of_day_at_snapshot",
+      "hour_of_day_submitted"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": 0.0036
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": 0.0067
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": -0.013
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": 0.0399
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": 0.0029
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": 0.0099
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": 0.0023
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0036
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": 0.0018
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0004
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": 0.0407
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": 0.0104
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": 0.0116
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": 0.0023
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": -0.0363
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "This case is flagged mainly because of hour_of_day_at_snapshot and hour_of_day_submitted.",
+    "prescriptive_action": {
+      "action_title": "Core-Hour Dispatch Priority",
+      "action_category": "DISPATCH_OPTIMIZE",
+      "current_risk": 0.321,
+      "projected_risk": 0.29,
+      "risk_reduction_pct": 3.1,
+      "feasibility": "HIGH",
+      "guidance": "Dispatch next task during peak business operating hours with SLA escalation flag (-3.1% Risk)."
+    }
+  },
+  {
+    "case_id": "OPEN-0020",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.0336,
+    "predicted_label": "On Track",
+    "risk_label": "On Track",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 3.2206,
+    "risk_drivers": [
+      "resource_at_reviewed",
+      "has_been_reworked_yet"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": -0.0187
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0244
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": 0.0038
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": -0.0099
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0188
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": -0.0187
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0157
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0229
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": -0.0035
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0239
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": -0.0195
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": -0.0071
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.0086
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": -0.0011
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": -0.0193
+      }
+    ],
+    "base_value": 0.2418,
+    "explanation": "Case is on track with low risk contribution across resource_at_reviewed and has_been_reworked_yet.",
+    "prescriptive_action": {
+      "action_title": "Maintain Standard Routing",
+      "action_category": "STANDARD_OPS",
+      "current_risk": 0.034,
+      "projected_risk": 0.034,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "HIGH",
+      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+    }
+  }
+]
