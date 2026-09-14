@@ -1,0 +1,22 @@
+# Environment variables and credentials
+.env
+
+# Python venv and cache
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Sidecars and backups
+upload_state.json
+event_log_previous.csv
+
+# Node and build outputs
+node_modules/
+.next/
+dist/
+build/
+
+# Runtime project storage (preserves sample datasets like storage/bpi2012_sample.csv)
+storage/projects/

@@ -1,0 +1,26 @@
+pandas==2.2.2
+pm4py==2.7.11.13
+matplotlib==3.9.2
+graphviz==0.20.3
+scikit-learn==1.6.1
+joblib==1.4.2
+crewai==1.15.20
+crewai-tools==1.15.20
+mcp==1.28.1
+mcpadapt==0.1.20
+google-genai==2.22.0
+python-dotenv==1.2.3
+# Phase 4 — API layer
+fastapi==0.141.1
+uvicorn==0.52.4
+# Phase 5 — file upload support (already in venv via mcp)
+python-multipart==0.0.32
+# Phase 6 — Supabase persistence
+supabase==2.31.0
+# Phase 7 — HTTP client for LLM services
+httpx==0.28.1
+# Phase G — Direct System Connectors (PostgreSQL)
+psycopg2-binary==2.9.13
+# Phase H5 — Real SHAP TreeExplainer for Random Forest
+shap==0.52.0
+
