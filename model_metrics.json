@@ -1,0 +1,238 @@
+{
+  "cv_strategy": "5-Fold Stratified Cross-Validation",
+  "n_splits": 5,
+  "strategy_note": "",
+  "risk_threshold": 0.19,
+  "threshold": 0.19,
+  "threshold_method": "OOF F1 with precision >= 0.30",
+  "operating_points": {
+    "conservative": {
+      "threshold": 0.4,
+      "precision": 0.3966,
+      "recall": 0.3966,
+      "f1": 0.3966,
+      "fpr": 0.1923,
+      "fnr": 0.6034,
+      "flagged_pct": 24.2,
+      "description": "High-precision threshold for resource-constrained operations"
+    },
+    "balanced": {
+      "threshold": 0.19,
+      "precision": 0.3309,
+      "recall": 0.7931,
+      "f1": 0.467,
+      "fpr": 0.511,
+      "fnr": 0.2069,
+      "flagged_pct": 57.9,
+      "description": "Selected primary threshold maximizing F1 with precision >= 0.30"
+    },
+    "sensitive": {
+      "threshold": 0.1,
+      "precision": 0.2784,
+      "recall": 0.931,
+      "f1": 0.4286,
+      "fpr": 0.7692,
+      "fnr": 0.069,
+      "flagged_pct": 80.8,
+      "description": "High-recall threshold for mission-critical zero-tolerance SLAs"
+    }
+  },
+  "accuracy": 0.54,
+  "precision": 0.3108,
+  "recall": 0.7276,
+  "f1": 0.4347,
+  "roc_auc": 0.6569,
+  "pr_auc": 0.3939,
+  "variation": {
+    "roc_auc": {
+      "mean": 0.6569,
+      "std": 0.0528,
+      "min": 0.5837,
+      "max": 0.717,
+      "range_str": "0.5837 \u2013 0.7170"
+    },
+    "pr_auc": {
+      "mean": 0.3939,
+      "std": 0.0287,
+      "min": 0.3619,
+      "max": 0.4318,
+      "range_str": "0.3619 \u2013 0.4318"
+    },
+    "f1": {
+      "mean": 0.4347,
+      "std": 0.0347,
+      "min": 0.4,
+      "max": 0.4706,
+      "range_str": "0.4000 \u2013 0.4706"
+    },
+    "accuracy": {
+      "mean": 0.54,
+      "std": 0.0384,
+      "min": 0.5,
+      "max": 0.5833,
+      "range_str": "0.5000 \u2013 0.5833"
+    },
+    "precision": {
+      "mean": 0.3108,
+      "std": 0.028,
+      "min": 0.2778,
+      "max": 0.3438,
+      "range_str": "0.2778 \u2013 0.3438"
+    },
+    "recall": {
+      "mean": 0.7276,
+      "std": 0.0781,
+      "min": 0.6667,
+      "max": 0.8571,
+      "range_str": "0.6667 \u2013 0.8571"
+    }
+  },
+  "fold_metrics": [
+    {
+      "fold": 1,
+      "val_samples": 60,
+      "late_cases": 14,
+      "accuracy": 0.55,
+      "precision": 0.3243,
+      "recall": 0.8571,
+      "f1": 0.4706,
+      "roc_auc": 0.6925,
+      "pr_auc": 0.3688
+    },
+    {
+      "fold": 2,
+      "val_samples": 60,
+      "late_cases": 14,
+      "accuracy": 0.5,
+      "precision": 0.2778,
+      "recall": 0.7143,
+      "f1": 0.4,
+      "roc_auc": 0.6273,
+      "pr_auc": 0.4018
+    },
+    {
+      "fold": 3,
+      "val_samples": 60,
+      "late_cases": 15,
+      "accuracy": 0.5,
+      "precision": 0.2857,
+      "recall": 0.6667,
+      "f1": 0.4,
+      "roc_auc": 0.5837,
+      "pr_auc": 0.3619
+    },
+    {
+      "fold": 4,
+      "val_samples": 60,
+      "late_cases": 15,
+      "accuracy": 0.5667,
+      "precision": 0.3226,
+      "recall": 0.6667,
+      "f1": 0.4348,
+      "roc_auc": 0.717,
+      "pr_auc": 0.4318
+    },
+    {
+      "fold": 5,
+      "val_samples": 60,
+      "late_cases": 15,
+      "accuracy": 0.5833,
+      "precision": 0.3438,
+      "recall": 0.7333,
+      "f1": 0.4681,
+      "roc_auc": 0.6637,
+      "pr_auc": 0.4053
+    }
+  ],
+  "test_set_metrics": {
+    "accuracy": 0.55,
+    "precision": 0.2857,
+    "recall": 0.5333,
+    "f1": 0.3721,
+    "roc_auc": 0.5926,
+    "pr_auc": 0.4203,
+    "risk_threshold": 0.19
+  },
+  "feature_importances": [
+    {
+      "feature": "wait_before_reviewed_hours",
+      "importance": 0.0971
+    },
+    {
+      "feature": "elapsed_hours_so_far",
+      "importance": 0.0969
+    },
+    {
+      "feature": "total_wait_hours_so_far",
+      "importance": 0.0936
+    },
+    {
+      "feature": "average_wait_hours_so_far",
+      "importance": 0.0918
+    },
+    {
+      "feature": "min_wait_hours_so_far",
+      "importance": 0.0918
+    },
+    {
+      "feature": "time_since_previous_activity",
+      "importance": 0.0912
+    },
+    {
+      "feature": "max_wait_hours_so_far",
+      "importance": 0.0865
+    },
+    {
+      "feature": "hour_of_day_at_snapshot",
+      "importance": 0.0684
+    },
+    {
+      "feature": "resource_at_submitted",
+      "importance": 0.0607
+    },
+    {
+      "feature": "hour_of_day_submitted",
+      "importance": 0.0589
+    },
+    {
+      "feature": "resource_at_reviewed",
+      "importance": 0.0577
+    },
+    {
+      "feature": "day_of_week_at_snapshot",
+      "importance": 0.0472
+    },
+    {
+      "feature": "day_of_week_submitted",
+      "importance": 0.0447
+    },
+    {
+      "feature": "is_weekend_submitted",
+      "importance": 0.0104
+    },
+    {
+      "feature": "number_of_long_waits_so_far",
+      "importance": 0.003
+    },
+    {
+      "feature": "has_been_reworked_yet",
+      "importance": 0.0
+    },
+    {
+      "feature": "events_seen_so_far",
+      "importance": 0.0
+    },
+    {
+      "feature": "unique_activities_so_far",
+      "importance": 0.0
+    },
+    {
+      "feature": "transition_count_so_far",
+      "importance": 0.0
+    },
+    {
+      "feature": "activity_repetition_count",
+      "importance": 0.0
+    }
+  ]
+}
