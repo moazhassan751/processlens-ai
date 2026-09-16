@@ -35,11 +35,17 @@ _request_times: deque = deque()
 
 SYSTEM_PROMPT = (
     "You are a process-analysis assistant.\n"
-    "Explain analytical results clearly and concisely.\n"
-    "Use only the supplied structured evidence.\n"
-    "Do not invent facts.\n"
-    "Focus on main cause, evidence, and recommended action.\n"
-    'Return JSON: {"summary": "...", "evidence": ["..."], "recommendation": "..."}'
+    "Explain analytical results clearly, professionally, and concisely.\n"
+    "Use only the supplied structured evidence. Do not invent facts.\n"
+    "Explicitly differentiate between immediate remediation (what to do now) "
+    "and root cause prevention (how to prevent it from happening again).\n"
+    'Return valid JSON: {\n'
+    '  "summary": "Clear executive summary of root-cause risk diagnosis",\n'
+    '  "evidence": ["Specific data point 1", "Specific data point 2"],\n'
+    '  "what_to_do": "Immediate tactical remediation steps to expedite or unblock this case",\n'
+    '  "how_to_prevent": "Preventative process controls, SLA thresholds, and validation rules to stop recurrence",\n'
+    '  "recommendation": "Comprehensive combined operational recommendation"\n'
+    '}'
 )
 
 
@@ -231,37 +237,50 @@ def _deterministic_case_explanation(facts: dict) -> dict:
     if risk_level == "HIGH" or (risk_score and risk_score > 0.7):
         summary = (
             f"Case {facts.get('case_id', '?')} is classified as HIGH RISK "
-            f"with a score of {risk_score:.1%}. "
+            f"with a delay probability of {risk_score:.1%}. "
             f"The case has been in process for {duration:.1f} hours "
-            f"and is currently at '{current}'. "
+            f"and is currently held at '{current}'."
         )
         if anomaly:
-            summary += "Additionally, the case exhibits anomalous behavior patterns. "
-        recommendation = (
-            "Prioritize this case for manual review. "
-            "Consider escalating to a senior process owner to prevent further delays."
+            summary += " Additionally, the case exhibits anomalous execution patterns flagging irregular cycle behavior."
+        what_to_do = (
+            f"Immediately escalate Case {facts.get('case_id', '?')} to the lead reviewer for priority handling. "
+            f"Expedite queue handover at '{current}' and conduct a fast-track compliance verification."
         )
+        how_to_prevent = (
+            f"Set up an automated 24-hour SLA alert on activity '{current}'. "
+            f"Enforce mandatory input checklist validation at intake to eliminate downstream handoff stalls and rework cycles."
+        )
+        recommendation = f"{what_to_do} {how_to_prevent}"
     elif risk_level == "MEDIUM" or (risk_score and risk_score > 0.4):
         summary = (
-            f"Case {facts.get('case_id', '?')} has a MODERATE risk level "
-            f"(score: {risk_score:.1%}). "
-            f"Currently at '{current}' after {duration:.1f} hours."
+            f"Case {facts.get('case_id', '?')} presents a MODERATE risk level "
+            f"(delay probability: {risk_score:.1%}). "
+            f"Currently active at '{current}' after {duration:.1f} hours of elapsed execution time."
         )
-        recommendation = (
-            "Monitor this case closely. No immediate action required, "
-            "but check back within the next review cycle."
+        what_to_do = (
+            f"Queue Case {facts.get('case_id', '?')} for proactive inspection before the next batch cycle. "
+            f"Verify that all handover requirements for '{current}' are satisfied."
         )
+        how_to_prevent = (
+            f"Monitor queue depth for '{current}' and redistribute workload if active resource queue exceeds 5 pending cases."
+        )
+        recommendation = f"{what_to_do} {how_to_prevent}"
     else:
         summary = (
-            f"Case {facts.get('case_id', '?')} is currently ON TRACK "
-            f"with a low risk score of {risk_score:.1%}. "
-            f"Currently at '{current}' after {duration:.1f} hours."
+            f"Case {facts.get('case_id', '?')} is proceeding ON TRACK "
+            f"with a minimal delay probability of {risk_score:.1%}. "
+            f"Current milestone: '{current}' after {duration:.1f} hours."
         )
-        recommendation = "No action needed. This case is proceeding normally."
+        what_to_do = "No intervention required. Allow standard automated workflow progression."
+        how_to_prevent = "Maintain standard automated SLA tracking and periodic batch status synchronization."
+        recommendation = "No intervention required. This case is proceeding normally within established operational benchmarks."
 
     return {
         "summary": summary,
         "evidence": evidence,
+        "what_to_do": what_to_do,
+        "how_to_prevent": how_to_prevent,
         "recommendation": recommendation,
     }
 
@@ -302,10 +321,19 @@ def explain_case(case_facts: dict, run_id: Optional[str] = None) -> dict:
         try:
             result = _call_llm(prompt)
             if result and isinstance(result, dict) and "summary" in result:
+                what_to_do = result.get("what_to_do")
+                how_to_prevent = result.get("how_to_prevent")
+                rec = result.get("recommendation", "")
+                if not what_to_do and rec:
+                    what_to_do = rec
+                if not how_to_prevent and rec:
+                    how_to_prevent = "Enforce automated stage SLA limits and intake validation to prevent recurrence."
                 explanation = {
                     "summary": result["summary"],
                     "evidence": result.get("evidence", []),
-                    "recommendation": result.get("recommendation", ""),
+                    "what_to_do": what_to_do or "Prioritize case for expedited review.",
+                    "how_to_prevent": how_to_prevent or "Enforce automated stage SLA limits and intake validation.",
+                    "recommendation": rec or f"{what_to_do} {how_to_prevent}",
                 }
                 source = "llm"
         except Exception as exc:

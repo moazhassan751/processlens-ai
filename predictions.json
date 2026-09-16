@@ -2,32 +2,32 @@
   {
     "case_id": "OPEN-0001",
     "current_step": "Reviewed",
-    "late_risk_probability": 0.1312,
+    "late_risk_probability": 0.1242,
     "predicted_label": "On Track",
     "risk_label": "On Track",
     "risk_threshold": 0.19,
     "anomaly_flag": false,
     "elapsed_hours_so_far": 2.0836,
     "risk_drivers": [
-      "resource_at_submitted",
-      "resource_at_reviewed"
+      "resource_at_reviewed",
+      "resource_at_submitted"
     ],
     "feature_contributions": [
       {
         "feature": "elapsed_hours_so_far",
-        "contribution": -0.0148
+        "contribution": -0.0009
       },
       {
         "feature": "wait_before_reviewed_hours",
-        "contribution": -0.0233
+        "contribution": -0.0231
       },
       {
         "feature": "resource_at_reviewed",
-        "contribution": 0.0089
+        "contribution": 0.0288
       },
       {
         "feature": "hour_of_day_submitted",
-        "contribution": -0.0046
+        "contribution": -0.0019
       },
       {
         "feature": "has_been_reworked_yet",
@@ -51,56 +51,56 @@
       },
       {
         "feature": "total_wait_hours_so_far",
-        "contribution": -0.0104
+        "contribution": -0.0203
       },
       {
         "feature": "average_wait_hours_so_far",
-        "contribution": -0.0217
+        "contribution": -0.0103
       },
       {
         "feature": "max_wait_hours_so_far",
-        "contribution": -0.0091
+        "contribution": -0.0153
       },
       {
         "feature": "min_wait_hours_so_far",
-        "contribution": -0.0189
+        "contribution": -0.0044
       },
       {
         "feature": "number_of_long_waits_so_far",
-        "contribution": 0.0023
+        "contribution": -0.0055
       },
       {
         "feature": "time_since_previous_activity",
-        "contribution": -0.0162
+        "contribution": -0.0007
       },
       {
         "feature": "hour_of_day_at_snapshot",
-        "contribution": -0.0205
+        "contribution": -0.0021
       },
       {
         "feature": "day_of_week_submitted",
-        "contribution": -0.0115
+        "contribution": -0.0368
       },
       {
         "feature": "day_of_week_at_snapshot",
-        "contribution": -0.0118
+        "contribution": -0.0326
       },
       {
         "feature": "is_weekend_submitted",
-        "contribution": -0.0026
+        "contribution": 0.0
       },
       {
         "feature": "resource_at_submitted",
-        "contribution": 0.0436
+        "contribution": 0.0001
       }
     ],
-    "base_value": 0.2418,
-    "explanation": "Case is on track with low risk contribution across resource_at_submitted and resource_at_reviewed.",
+    "base_value": 0.2494,
+    "explanation": "Case is on track with low risk contribution across resource_at_reviewed and resource_at_submitted.",
     "prescriptive_action": {
       "action_title": "Maintain Standard Routing",
       "action_category": "STANDARD_OPS",
-      "current_risk": 0.131,
-      "projected_risk": 0.131,
+      "current_risk": 0.124,
+      "projected_risk": 0.124,
       "risk_reduction_pct": 0.0,
       "feasibility": "HIGH",
       "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
@@ -132,335 +132,14 @@
   {
     "case_id": "OPEN-0003",
     "current_step": "Reviewed",
-    "late_risk_probability": 0.1046,
-    "predicted_label": "On Track",
-    "risk_label": "On Track",
+    "late_risk_probability": 0.3144,
+    "predicted_label": "Late Risk",
+    "risk_label": "Late Risk",
     "risk_threshold": 0.19,
     "anomaly_flag": false,
     "elapsed_hours_so_far": 2.7436,
     "risk_drivers": [
-      "hour_of_day_at_snapshot",
-      "hour_of_day_submitted"
-    ],
-    "feature_contributions": [
-      {
-        "feature": "elapsed_hours_so_far",
-        "contribution": -0.0099
-      },
-      {
-        "feature": "wait_before_reviewed_hours",
-        "contribution": -0.0193
-      },
-      {
-        "feature": "resource_at_reviewed",
-        "contribution": -0.0165
-      },
-      {
-        "feature": "hour_of_day_submitted",
-        "contribution": 0.0115
-      },
-      {
-        "feature": "has_been_reworked_yet",
-        "contribution": 0.0
-      },
-      {
-        "feature": "events_seen_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "unique_activities_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "transition_count_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "activity_repetition_count",
-        "contribution": 0.0
-      },
-      {
-        "feature": "total_wait_hours_so_far",
-        "contribution": -0.0112
-      },
-      {
-        "feature": "average_wait_hours_so_far",
-        "contribution": -0.0076
-      },
-      {
-        "feature": "max_wait_hours_so_far",
-        "contribution": -0.0117
-      },
-      {
-        "feature": "min_wait_hours_so_far",
-        "contribution": -0.0162
-      },
-      {
-        "feature": "number_of_long_waits_so_far",
-        "contribution": 0.0011
-      },
-      {
-        "feature": "time_since_previous_activity",
-        "contribution": -0.0135
-      },
-      {
-        "feature": "hour_of_day_at_snapshot",
-        "contribution": 0.0156
-      },
-      {
-        "feature": "day_of_week_submitted",
-        "contribution": -0.0137
-      },
-      {
-        "feature": "day_of_week_at_snapshot",
-        "contribution": -0.0206
-      },
-      {
-        "feature": "is_weekend_submitted",
-        "contribution": -0.0001
-      },
-      {
-        "feature": "resource_at_submitted",
-        "contribution": -0.0251
-      }
-    ],
-    "base_value": 0.2418,
-    "explanation": "Case is on track with low risk contribution across hour_of_day_at_snapshot and hour_of_day_submitted.",
-    "prescriptive_action": {
-      "action_title": "Maintain Standard Routing",
-      "action_category": "STANDARD_OPS",
-      "current_risk": 0.105,
-      "projected_risk": 0.105,
-      "risk_reduction_pct": 0.0,
-      "feasibility": "HIGH",
-      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
-    }
-  },
-  {
-    "case_id": "OPEN-0004",
-    "current_step": "Reviewed",
-    "late_risk_probability": 0.6432,
-    "predicted_label": "Late Risk",
-    "risk_label": "Late Risk",
-    "risk_threshold": 0.19,
-    "anomaly_flag": true,
-    "elapsed_hours_so_far": 5.2414,
-    "risk_drivers": [
-      "total_wait_hours_so_far",
-      "time_since_previous_activity"
-    ],
-    "feature_contributions": [
-      {
-        "feature": "elapsed_hours_so_far",
-        "contribution": 0.0611
-      },
-      {
-        "feature": "wait_before_reviewed_hours",
-        "contribution": 0.0622
-      },
-      {
-        "feature": "resource_at_reviewed",
-        "contribution": 0.0083
-      },
-      {
-        "feature": "hour_of_day_submitted",
-        "contribution": 0.0086
-      },
-      {
-        "feature": "has_been_reworked_yet",
-        "contribution": 0.0
-      },
-      {
-        "feature": "events_seen_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "unique_activities_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "transition_count_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "activity_repetition_count",
-        "contribution": 0.0
-      },
-      {
-        "feature": "total_wait_hours_so_far",
-        "contribution": 0.0742
-      },
-      {
-        "feature": "average_wait_hours_so_far",
-        "contribution": 0.0611
-      },
-      {
-        "feature": "max_wait_hours_so_far",
-        "contribution": 0.0711
-      },
-      {
-        "feature": "min_wait_hours_so_far",
-        "contribution": 0.0456
-      },
-      {
-        "feature": "number_of_long_waits_so_far",
-        "contribution": 0.0015
-      },
-      {
-        "feature": "time_since_previous_activity",
-        "contribution": 0.0736
-      },
-      {
-        "feature": "hour_of_day_at_snapshot",
-        "contribution": -0.0068
-      },
-      {
-        "feature": "day_of_week_submitted",
-        "contribution": -0.0237
-      },
-      {
-        "feature": "day_of_week_at_snapshot",
-        "contribution": -0.0085
-      },
-      {
-        "feature": "is_weekend_submitted",
-        "contribution": -0.0039
-      },
-      {
-        "feature": "resource_at_submitted",
-        "contribution": -0.023
-      }
-    ],
-    "base_value": 0.2418,
-    "explanation": "This case is flagged mainly because of total_wait_hours_so_far and time_since_previous_activity.",
-    "prescriptive_action": {
-      "action_title": "Expedite Approval Step",
-      "action_category": "QUEUE_PRIORITY",
-      "current_risk": 0.643,
-      "projected_risk": 0.421,
-      "risk_reduction_pct": 22.2,
-      "feasibility": "HIGH",
-      "guidance": "Fast-track next approval queue. Cutting wait time to <=1h reduces late risk by 22.2%."
-    }
-  },
-  {
-    "case_id": "OPEN-0005",
-    "current_step": "Reviewed",
-    "late_risk_probability": 0.1968,
-    "predicted_label": "Late Risk",
-    "risk_label": "Late Risk",
-    "risk_threshold": 0.19,
-    "anomaly_flag": false,
-    "elapsed_hours_so_far": 3.4386,
-    "risk_drivers": [
-      "hour_of_day_at_snapshot",
-      "elapsed_hours_so_far"
-    ],
-    "feature_contributions": [
-      {
-        "feature": "elapsed_hours_so_far",
-        "contribution": 0.0048
-      },
-      {
-        "feature": "wait_before_reviewed_hours",
-        "contribution": -0.0086
-      },
-      {
-        "feature": "resource_at_reviewed",
-        "contribution": -0.0134
-      },
-      {
-        "feature": "hour_of_day_submitted",
-        "contribution": -0.0226
-      },
-      {
-        "feature": "has_been_reworked_yet",
-        "contribution": 0.0
-      },
-      {
-        "feature": "events_seen_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "unique_activities_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "transition_count_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "activity_repetition_count",
-        "contribution": 0.0
-      },
-      {
-        "feature": "total_wait_hours_so_far",
-        "contribution": -0.0009
-      },
-      {
-        "feature": "average_wait_hours_so_far",
-        "contribution": 0.0037
-      },
-      {
-        "feature": "max_wait_hours_so_far",
-        "contribution": 0.0032
-      },
-      {
-        "feature": "min_wait_hours_so_far",
-        "contribution": -0.0006
-      },
-      {
-        "feature": "number_of_long_waits_so_far",
-        "contribution": 0.0004
-      },
-      {
-        "feature": "time_since_previous_activity",
-        "contribution": 0.0012
-      },
-      {
-        "feature": "hour_of_day_at_snapshot",
-        "contribution": 0.0311
-      },
-      {
-        "feature": "day_of_week_submitted",
-        "contribution": -0.0091
-      },
-      {
-        "feature": "day_of_week_at_snapshot",
-        "contribution": -0.012
-      },
-      {
-        "feature": "is_weekend_submitted",
-        "contribution": -0.0013
-      },
-      {
-        "feature": "resource_at_submitted",
-        "contribution": -0.021
-      }
-    ],
-    "base_value": 0.2418,
-    "explanation": "This case is flagged mainly because of hour_of_day_at_snapshot and elapsed_hours_so_far.",
-    "prescriptive_action": {
-      "action_title": "Expedite Approval Step",
-      "action_category": "QUEUE_PRIORITY",
-      "current_risk": 0.197,
-      "projected_risk": 0.128,
-      "risk_reduction_pct": 6.9,
-      "feasibility": "HIGH",
-      "guidance": "Fast-track next approval queue. Cutting wait time to <=1h reduces late risk by 6.9%."
-    }
-  },
-  {
-    "case_id": "OPEN-0006",
-    "current_step": "Reviewed",
-    "late_risk_probability": 0.2687,
-    "predicted_label": "Late Risk",
-    "risk_label": "Late Risk",
-    "risk_threshold": 0.19,
-    "anomaly_flag": false,
-    "elapsed_hours_so_far": 2.0597,
-    "risk_drivers": [
-      "resource_at_submitted",
+      "day_of_week_submitted",
       "day_of_week_at_snapshot"
     ],
     "feature_contributions": [
@@ -470,15 +149,15 @@
       },
       {
         "feature": "wait_before_reviewed_hours",
-        "contribution": -0.0118
+        "contribution": -0.0202
       },
       {
         "feature": "resource_at_reviewed",
-        "contribution": -0.0196
+        "contribution": 0.0064
       },
       {
         "feature": "hour_of_day_submitted",
-        "contribution": 0.0063
+        "contribution": -0.0483
       },
       {
         "feature": "has_been_reworked_yet",
@@ -502,292 +181,292 @@
       },
       {
         "feature": "total_wait_hours_so_far",
-        "contribution": -0.0029
+        "contribution": -0.024
       },
       {
         "feature": "average_wait_hours_so_far",
-        "contribution": -0.0211
+        "contribution": -0.0126
       },
       {
         "feature": "max_wait_hours_so_far",
+        "contribution": -0.0061
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0035
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
         "contribution": -0.0006
       },
       {
-        "feature": "min_wait_hours_so_far",
-        "contribution": -0.0116
-      },
-      {
-        "feature": "number_of_long_waits_so_far",
-        "contribution": 0.0042
-      },
-      {
         "feature": "time_since_previous_activity",
-        "contribution": -0.0099
+        "contribution": -0.0182
       },
       {
         "feature": "hour_of_day_at_snapshot",
-        "contribution": 0.0012
+        "contribution": -0.1114
       },
       {
         "feature": "day_of_week_submitted",
-        "contribution": 0.0088
+        "contribution": 0.1696
       },
       {
         "feature": "day_of_week_at_snapshot",
-        "contribution": 0.0138
+        "contribution": 0.145
       },
       {
         "feature": "is_weekend_submitted",
-        "contribution": -0.0011
+        "contribution": 0.0
       },
       {
         "feature": "resource_at_submitted",
-        "contribution": 0.0839
+        "contribution": 0.0015
       }
     ],
-    "base_value": 0.2418,
-    "explanation": "This case is flagged mainly because of resource_at_submitted and day_of_week_at_snapshot.",
+    "base_value": 0.2494,
+    "explanation": "This case is flagged mainly because of day_of_week_submitted and day_of_week_at_snapshot.",
     "prescriptive_action": {
-      "action_title": "Reassign to Priority Pool",
-      "action_category": "LOAD_BALANCING",
-      "current_risk": 0.269,
-      "projected_risk": 0.051,
-      "risk_reduction_pct": 21.7,
+      "action_title": "Core-Hour Dispatch Priority",
+      "action_category": "DISPATCH_OPTIMIZE",
+      "current_risk": 0.314,
+      "projected_risk": 0.21,
+      "risk_reduction_pct": 10.4,
       "feasibility": "HIGH",
-      "guidance": "Reassign subsequent steps to high-velocity resource pool to avoid queue congestion (-21.7% Risk)."
+      "guidance": "Dispatch next task during peak business operating hours with SLA escalation flag (-10.4% Risk)."
     }
   },
   {
-    "case_id": "OPEN-0007",
+    "case_id": "OPEN-0004",
     "current_step": "Reviewed",
-    "late_risk_probability": 0.1732,
+    "late_risk_probability": 0.101,
     "predicted_label": "On Track",
     "risk_label": "On Track",
     "risk_threshold": 0.19,
     "anomaly_flag": false,
-    "elapsed_hours_so_far": 1.7539,
-    "risk_drivers": [
-      "resource_at_submitted",
-      "resource_at_reviewed"
-    ],
-    "feature_contributions": [
-      {
-        "feature": "elapsed_hours_so_far",
-        "contribution": -0.0207
-      },
-      {
-        "feature": "wait_before_reviewed_hours",
-        "contribution": -0.0244
-      },
-      {
-        "feature": "resource_at_reviewed",
-        "contribution": 0.0153
-      },
-      {
-        "feature": "hour_of_day_submitted",
-        "contribution": -0.0064
-      },
-      {
-        "feature": "has_been_reworked_yet",
-        "contribution": 0.0
-      },
-      {
-        "feature": "events_seen_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "unique_activities_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "transition_count_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "activity_repetition_count",
-        "contribution": 0.0
-      },
-      {
-        "feature": "total_wait_hours_so_far",
-        "contribution": -0.0197
-      },
-      {
-        "feature": "average_wait_hours_so_far",
-        "contribution": -0.018
-      },
-      {
-        "feature": "max_wait_hours_so_far",
-        "contribution": -0.0234
-      },
-      {
-        "feature": "min_wait_hours_so_far",
-        "contribution": -0.0148
-      },
-      {
-        "feature": "number_of_long_waits_so_far",
-        "contribution": 0.004
-      },
-      {
-        "feature": "time_since_previous_activity",
-        "contribution": -0.0189
-      },
-      {
-        "feature": "hour_of_day_at_snapshot",
-        "contribution": 0.0106
-      },
-      {
-        "feature": "day_of_week_submitted",
-        "contribution": -0.0053
-      },
-      {
-        "feature": "day_of_week_at_snapshot",
-        "contribution": -0.0038
-      },
-      {
-        "feature": "is_weekend_submitted",
-        "contribution": -0.0013
-      },
-      {
-        "feature": "resource_at_submitted",
-        "contribution": 0.0583
-      }
-    ],
-    "base_value": 0.2418,
-    "explanation": "Case is on track with low risk contribution across resource_at_submitted and resource_at_reviewed.",
-    "prescriptive_action": {
-      "action_title": "Maintain Standard Routing",
-      "action_category": "STANDARD_OPS",
-      "current_risk": 0.173,
-      "projected_risk": 0.173,
-      "risk_reduction_pct": 0.0,
-      "feasibility": "HIGH",
-      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
-    }
-  },
-  {
-    "case_id": "OPEN-0008",
-    "current_step": "Reviewed",
-    "late_risk_probability": 0.0365,
-    "predicted_label": "On Track",
-    "risk_label": "On Track",
-    "risk_threshold": 0.19,
-    "anomaly_flag": false,
-    "elapsed_hours_so_far": 1.5411,
+    "elapsed_hours_so_far": 5.2414,
     "risk_drivers": [
       "resource_at_reviewed",
-      "day_of_week_at_snapshot"
-    ],
-    "feature_contributions": [
-      {
-        "feature": "elapsed_hours_so_far",
-        "contribution": -0.0269
-      },
-      {
-        "feature": "wait_before_reviewed_hours",
-        "contribution": -0.0391
-      },
-      {
-        "feature": "resource_at_reviewed",
-        "contribution": 0.02
-      },
-      {
-        "feature": "hour_of_day_submitted",
-        "contribution": -0.0176
-      },
-      {
-        "feature": "has_been_reworked_yet",
-        "contribution": 0.0
-      },
-      {
-        "feature": "events_seen_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "unique_activities_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "transition_count_so_far",
-        "contribution": 0.0
-      },
-      {
-        "feature": "activity_repetition_count",
-        "contribution": 0.0
-      },
-      {
-        "feature": "total_wait_hours_so_far",
-        "contribution": -0.0278
-      },
-      {
-        "feature": "average_wait_hours_so_far",
-        "contribution": -0.0216
-      },
-      {
-        "feature": "max_wait_hours_so_far",
-        "contribution": -0.0224
-      },
-      {
-        "feature": "min_wait_hours_so_far",
-        "contribution": -0.0265
-      },
-      {
-        "feature": "number_of_long_waits_so_far",
-        "contribution": -0.0007
-      },
-      {
-        "feature": "time_since_previous_activity",
-        "contribution": -0.0231
-      },
-      {
-        "feature": "hour_of_day_at_snapshot",
-        "contribution": -0.0144
-      },
-      {
-        "feature": "day_of_week_submitted",
-        "contribution": 0.0031
-      },
-      {
-        "feature": "day_of_week_at_snapshot",
-        "contribution": 0.005
-      },
-      {
-        "feature": "is_weekend_submitted",
-        "contribution": -0.0028
-      },
-      {
-        "feature": "resource_at_submitted",
-        "contribution": -0.0106
-      }
-    ],
-    "base_value": 0.2418,
-    "explanation": "Case is on track with low risk contribution across resource_at_reviewed and day_of_week_at_snapshot.",
-    "prescriptive_action": {
-      "action_title": "Maintain Standard Routing",
-      "action_category": "STANDARD_OPS",
-      "current_risk": 0.036,
-      "projected_risk": 0.036,
-      "risk_reduction_pct": 0.0,
-      "feasibility": "HIGH",
-      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
-    }
-  },
-  {
-    "case_id": "OPEN-0009",
-    "current_step": "Reviewed",
-    "late_risk_probability": 0.1691,
-    "predicted_label": "On Track",
-    "risk_label": "On Track",
-    "risk_threshold": 0.19,
-    "anomaly_flag": true,
-    "elapsed_hours_so_far": 1.1892,
-    "risk_drivers": [
-      "resource_at_submitted",
       "hour_of_day_at_snapshot"
     ],
     "feature_contributions": [
       {
         "feature": "elapsed_hours_so_far",
-        "contribution": -0.022
+        "contribution": -0.011
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0054
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": 0.0132
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": 0.0004
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0109
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": -0.0149
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0067
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0094
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": -0.0003
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0063
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": 0.0045
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": -0.058
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.0473
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": 0.0
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": 0.0038
+      }
+    ],
+    "base_value": 0.2494,
+    "explanation": "Case is on track with low risk contribution across resource_at_reviewed and hour_of_day_at_snapshot.",
+    "prescriptive_action": {
+      "action_title": "Maintain Standard Routing",
+      "action_category": "STANDARD_OPS",
+      "current_risk": 0.101,
+      "projected_risk": 0.101,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "HIGH",
+      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+    }
+  },
+  {
+    "case_id": "OPEN-0005",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.094,
+    "predicted_label": "On Track",
+    "risk_label": "On Track",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 3.4386,
+    "risk_drivers": [
+      "resource_at_reviewed",
+      "resource_at_submitted"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": -0.0227
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.013
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": 0.019
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": -0.0014
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": -0.0122
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": -0.0107
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.009
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0079
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": -0.0009
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": -0.0095
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": -0.0014
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": -0.0509
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.0365
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": 0.0
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": 0.0017
+      }
+    ],
+    "base_value": 0.2494,
+    "explanation": "Case is on track with low risk contribution across resource_at_reviewed and resource_at_submitted.",
+    "prescriptive_action": {
+      "action_title": "Maintain Standard Routing",
+      "action_category": "STANDARD_OPS",
+      "current_risk": 0.094,
+      "projected_risk": 0.094,
+      "risk_reduction_pct": 0.0,
+      "feasibility": "HIGH",
+      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+    }
+  },
+  {
+    "case_id": "OPEN-0006",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.1672,
+    "predicted_label": "On Track",
+    "risk_label": "On Track",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 2.0597,
+    "risk_drivers": [
+      "resource_at_reviewed",
+      "hour_of_day_submitted"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": 0.0028
       },
       {
         "feature": "wait_before_reviewed_hours",
@@ -795,11 +474,11 @@
       },
       {
         "feature": "resource_at_reviewed",
-        "contribution": -0.0042
+        "contribution": 0.0297
       },
       {
         "feature": "hour_of_day_submitted",
-        "contribution": -0.007
+        "contribution": 0.0042
       },
       {
         "feature": "has_been_reworked_yet",
@@ -823,90 +502,90 @@
       },
       {
         "feature": "total_wait_hours_so_far",
-        "contribution": -0.0145
+        "contribution": -0.0188
       },
       {
         "feature": "average_wait_hours_so_far",
-        "contribution": -0.0109
+        "contribution": -0.0079
       },
       {
         "feature": "max_wait_hours_so_far",
-        "contribution": -0.0154
+        "contribution": -0.0065
       },
       {
         "feature": "min_wait_hours_so_far",
-        "contribution": -0.0073
+        "contribution": 0.0034
       },
       {
         "feature": "number_of_long_waits_so_far",
-        "contribution": 0.0025
+        "contribution": -0.0059
       },
       {
         "feature": "time_since_previous_activity",
-        "contribution": -0.0169
+        "contribution": 0.0041
       },
       {
         "feature": "hour_of_day_at_snapshot",
-        "contribution": 0.0176
+        "contribution": -0.0006
       },
       {
         "feature": "day_of_week_submitted",
-        "contribution": 0.0001
+        "contribution": -0.0339
       },
       {
         "feature": "day_of_week_at_snapshot",
-        "contribution": -0.0017
+        "contribution": -0.032
       },
       {
         "feature": "is_weekend_submitted",
-        "contribution": -0.0013
+        "contribution": 0.0
       },
       {
         "feature": "resource_at_submitted",
-        "contribution": 0.0309
+        "contribution": 0.0018
       }
     ],
-    "base_value": 0.2418,
-    "explanation": "Case is on track with low risk contribution across resource_at_submitted and hour_of_day_at_snapshot.",
+    "base_value": 0.2494,
+    "explanation": "Case is on track with low risk contribution across resource_at_reviewed and hour_of_day_submitted.",
     "prescriptive_action": {
       "action_title": "Maintain Standard Routing",
       "action_category": "STANDARD_OPS",
-      "current_risk": 0.169,
-      "projected_risk": 0.169,
+      "current_risk": 0.167,
+      "projected_risk": 0.167,
       "risk_reduction_pct": 0.0,
       "feasibility": "HIGH",
       "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
     }
   },
   {
-    "case_id": "OPEN-0010",
+    "case_id": "OPEN-0007",
     "current_step": "Reviewed",
-    "late_risk_probability": 0.0206,
-    "predicted_label": "On Track",
-    "risk_label": "On Track",
+    "late_risk_probability": 0.4998,
+    "predicted_label": "Late Risk",
+    "risk_label": "Late Risk",
     "risk_threshold": 0.19,
-    "anomaly_flag": false,
-    "elapsed_hours_so_far": 3.795,
+    "anomaly_flag": true,
+    "elapsed_hours_so_far": 1.7539,
     "risk_drivers": [
-      "has_been_reworked_yet",
-      "events_seen_so_far"
+      "day_of_week_submitted",
+      "day_of_week_at_snapshot"
     ],
     "feature_contributions": [
       {
         "feature": "elapsed_hours_so_far",
-        "contribution": -0.0195
+        "contribution": -0.0089
       },
       {
         "feature": "wait_before_reviewed_hours",
-        "contribution": -0.0309
+        "contribution": -0.0206
       },
       {
         "feature": "resource_at_reviewed",
-        "contribution": -0.0074
+        "contribution": -0.0002
       },
       {
         "feature": "hour_of_day_submitted",
-        "contribution": -0.0122
+        "contribution": -0.0041
       },
       {
         "feature": "has_been_reworked_yet",
@@ -930,59 +609,380 @@
       },
       {
         "feature": "total_wait_hours_so_far",
-        "contribution": -0.0291
+        "contribution": -0.0154
       },
       {
         "feature": "average_wait_hours_so_far",
-        "contribution": -0.015
+        "contribution": -0.004
       },
       {
         "feature": "max_wait_hours_so_far",
-        "contribution": -0.0155
+        "contribution": 0.0002
       },
       {
         "feature": "min_wait_hours_so_far",
-        "contribution": -0.0271
+        "contribution": 0.0021
       },
       {
         "feature": "number_of_long_waits_so_far",
-        "contribution": -0.0032
+        "contribution": 0.0019
       },
       {
         "feature": "time_since_previous_activity",
-        "contribution": -0.0157
+        "contribution": -0.0141
       },
       {
         "feature": "hour_of_day_at_snapshot",
-        "contribution": -0.0192
+        "contribution": -0.0973
       },
       {
         "feature": "day_of_week_submitted",
-        "contribution": -0.0031
+        "contribution": 0.209
       },
       {
         "feature": "day_of_week_at_snapshot",
-        "contribution": -0.0117
+        "contribution": 0.2002
       },
       {
         "feature": "is_weekend_submitted",
-        "contribution": -0.001
+        "contribution": 0.0
       },
       {
         "feature": "resource_at_submitted",
-        "contribution": -0.0106
+        "contribution": 0.0016
       }
     ],
-    "base_value": 0.2418,
-    "explanation": "Case is on track with low risk contribution across has_been_reworked_yet and events_seen_so_far.",
+    "base_value": 0.2494,
+    "explanation": "This case is flagged mainly because of day_of_week_submitted and day_of_week_at_snapshot.",
     "prescriptive_action": {
-      "action_title": "Maintain Standard Routing",
-      "action_category": "STANDARD_OPS",
-      "current_risk": 0.021,
-      "projected_risk": 0.021,
-      "risk_reduction_pct": 0.0,
+      "action_title": "Core-Hour Dispatch Priority",
+      "action_category": "DISPATCH_OPTIMIZE",
+      "current_risk": 0.5,
+      "projected_risk": 0.276,
+      "risk_reduction_pct": 22.4,
       "feasibility": "HIGH",
-      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+      "guidance": "Dispatch next task during peak business operating hours with SLA escalation flag (-22.4% Risk)."
+    }
+  },
+  {
+    "case_id": "OPEN-0008",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.196,
+    "predicted_label": "Late Risk",
+    "risk_label": "Late Risk",
+    "risk_threshold": 0.19,
+    "anomaly_flag": true,
+    "elapsed_hours_so_far": 1.5411,
+    "risk_drivers": [
+      "time_since_previous_activity",
+      "average_wait_hours_so_far"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": 0.0029
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0133
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": 0.0073
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": -0.0048
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": 0.0014
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": 0.0122
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0037
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": 0.0002
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": -0.0052
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": 0.014
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": -0.0036
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": -0.034
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.0321
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": 0.0
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": 0.0051
+      }
+    ],
+    "base_value": 0.2494,
+    "explanation": "This case is flagged mainly because of time_since_previous_activity and average_wait_hours_so_far.",
+    "prescriptive_action": {
+      "action_title": "Expedite Approval Step",
+      "action_category": "QUEUE_PRIORITY",
+      "current_risk": 0.196,
+      "projected_risk": 0.127,
+      "risk_reduction_pct": 6.9,
+      "feasibility": "HIGH",
+      "guidance": "Fast-track next approval queue. Cutting wait time to <=1h reduces late risk by 6.9%."
+    }
+  },
+  {
+    "case_id": "OPEN-0009",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.2441,
+    "predicted_label": "Late Risk",
+    "risk_label": "Late Risk",
+    "risk_threshold": 0.19,
+    "anomaly_flag": true,
+    "elapsed_hours_so_far": 1.1892,
+    "risk_drivers": [
+      "average_wait_hours_so_far",
+      "time_since_previous_activity"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": 0.0023
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": -0.0084
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": 0.0099
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": -0.0051
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": 0.0123
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": 0.019
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": -0.0022
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": -0.0002
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": -0.004
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": 0.0147
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": 0.0038
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": -0.0292
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": -0.0252
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": 0.0
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": 0.007
+      }
+    ],
+    "base_value": 0.2494,
+    "explanation": "This case is flagged mainly because of average_wait_hours_so_far and time_since_previous_activity.",
+    "prescriptive_action": {
+      "action_title": "Expedite Approval Step",
+      "action_category": "QUEUE_PRIORITY",
+      "current_risk": 0.244,
+      "projected_risk": 0.159,
+      "risk_reduction_pct": 8.5,
+      "feasibility": "HIGH",
+      "guidance": "Fast-track next approval queue. Cutting wait time to <=1h reduces late risk by 8.5%."
+    }
+  },
+  {
+    "case_id": "OPEN-0010",
+    "current_step": "Reviewed",
+    "late_risk_probability": 0.9392,
+    "predicted_label": "Late Risk",
+    "risk_label": "Late Risk",
+    "risk_threshold": 0.19,
+    "anomaly_flag": false,
+    "elapsed_hours_so_far": 3.795,
+    "risk_drivers": [
+      "day_of_week_submitted",
+      "day_of_week_at_snapshot"
+    ],
+    "feature_contributions": [
+      {
+        "feature": "elapsed_hours_so_far",
+        "contribution": 0.0079
+      },
+      {
+        "feature": "wait_before_reviewed_hours",
+        "contribution": 0.0139
+      },
+      {
+        "feature": "resource_at_reviewed",
+        "contribution": 0.0056
+      },
+      {
+        "feature": "hour_of_day_submitted",
+        "contribution": 0.0208
+      },
+      {
+        "feature": "has_been_reworked_yet",
+        "contribution": 0.0
+      },
+      {
+        "feature": "events_seen_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "unique_activities_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "transition_count_so_far",
+        "contribution": 0.0
+      },
+      {
+        "feature": "activity_repetition_count",
+        "contribution": 0.0
+      },
+      {
+        "feature": "total_wait_hours_so_far",
+        "contribution": 0.004
+      },
+      {
+        "feature": "average_wait_hours_so_far",
+        "contribution": 0.0074
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": 0.0068
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": 0.0031
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": -0.0005
+      },
+      {
+        "feature": "time_since_previous_activity",
+        "contribution": 0.0122
+      },
+      {
+        "feature": "hour_of_day_at_snapshot",
+        "contribution": 0.0297
+      },
+      {
+        "feature": "day_of_week_submitted",
+        "contribution": 0.3175
+      },
+      {
+        "feature": "day_of_week_at_snapshot",
+        "contribution": 0.2586
+      },
+      {
+        "feature": "is_weekend_submitted",
+        "contribution": 0.0
+      },
+      {
+        "feature": "resource_at_submitted",
+        "contribution": 0.0026
+      }
+    ],
+    "base_value": 0.2494,
+    "explanation": "This case is flagged mainly because of day_of_week_submitted and day_of_week_at_snapshot.",
+    "prescriptive_action": {
+      "action_title": "Core-Hour Dispatch Priority",
+      "action_category": "DISPATCH_OPTIMIZE",
+      "current_risk": 0.939,
+      "projected_risk": 0.474,
+      "risk_reduction_pct": 46.5,
+      "feasibility": "HIGH",
+      "guidance": "Dispatch next task during peak business operating hours with SLA escalation flag (-46.5% Risk)."
     }
   },
   {
@@ -1034,32 +1034,32 @@
   {
     "case_id": "OPEN-0013",
     "current_step": "Reviewed",
-    "late_risk_probability": 0.0175,
-    "predicted_label": "On Track",
-    "risk_label": "On Track",
+    "late_risk_probability": 0.2223,
+    "predicted_label": "Late Risk",
+    "risk_label": "Late Risk",
     "risk_threshold": 0.19,
-    "anomaly_flag": false,
+    "anomaly_flag": true,
     "elapsed_hours_so_far": 1.5472,
     "risk_drivers": [
-      "hour_of_day_at_snapshot",
-      "day_of_week_at_snapshot"
+      "resource_at_reviewed",
+      "average_wait_hours_so_far"
     ],
     "feature_contributions": [
       {
         "feature": "elapsed_hours_so_far",
-        "contribution": -0.0277
+        "contribution": 0.0011
       },
       {
         "feature": "wait_before_reviewed_hours",
-        "contribution": -0.0397
+        "contribution": -0.0127
       },
       {
         "feature": "resource_at_reviewed",
-        "contribution": -0.007
+        "contribution": 0.0151
       },
       {
         "feature": "hour_of_day_submitted",
-        "contribution": -0.0099
+        "contribution": -0.005
       },
       {
         "feature": "has_been_reworked_yet",
@@ -1083,59 +1083,59 @@
       },
       {
         "feature": "total_wait_hours_so_far",
-        "contribution": -0.0291
+        "contribution": 0.0046
       },
       {
         "feature": "average_wait_hours_so_far",
-        "contribution": -0.02
+        "contribution": 0.0122
       },
       {
         "feature": "max_wait_hours_so_far",
-        "contribution": -0.0321
+        "contribution": -0.0011
       },
       {
         "feature": "min_wait_hours_so_far",
-        "contribution": -0.0257
+        "contribution": -0.0006
       },
       {
         "feature": "number_of_long_waits_so_far",
-        "contribution": 0.0005
+        "contribution": -0.0047
       },
       {
         "feature": "time_since_previous_activity",
-        "contribution": -0.0282
+        "contribution": 0.0105
       },
       {
         "feature": "hour_of_day_at_snapshot",
-        "contribution": 0.0068
+        "contribution": -0.0071
       },
       {
         "feature": "day_of_week_submitted",
-        "contribution": 0.0034
+        "contribution": -0.0212
       },
       {
         "feature": "day_of_week_at_snapshot",
-        "contribution": 0.0036
+        "contribution": -0.0235
       },
       {
         "feature": "is_weekend_submitted",
-        "contribution": -0.0025
+        "contribution": 0.0
       },
       {
         "feature": "resource_at_submitted",
-        "contribution": -0.0168
+        "contribution": 0.0055
       }
     ],
-    "base_value": 0.2418,
-    "explanation": "Case is on track with low risk contribution across hour_of_day_at_snapshot and day_of_week_at_snapshot.",
+    "base_value": 0.2494,
+    "explanation": "This case is flagged mainly because of resource_at_reviewed and average_wait_hours_so_far.",
     "prescriptive_action": {
-      "action_title": "Maintain Standard Routing",
-      "action_category": "STANDARD_OPS",
-      "current_risk": 0.018,
-      "projected_risk": 0.018,
-      "risk_reduction_pct": 0.0,
+      "action_title": "Expedite Approval Step",
+      "action_category": "QUEUE_PRIORITY",
+      "current_risk": 0.222,
+      "projected_risk": 0.144,
+      "risk_reduction_pct": 7.8,
       "feasibility": "HIGH",
-      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+      "guidance": "Fast-track next approval queue. Cutting wait time to <=1h reduces late risk by 7.8%."
     }
   },
   {
@@ -1256,32 +1256,32 @@
   {
     "case_id": "OPEN-0019",
     "current_step": "Reviewed",
-    "late_risk_probability": 0.3207,
-    "predicted_label": "Late Risk",
-    "risk_label": "Late Risk",
+    "late_risk_probability": 0.1629,
+    "predicted_label": "On Track",
+    "risk_label": "On Track",
     "risk_threshold": 0.19,
     "anomaly_flag": false,
     "elapsed_hours_so_far": 2.6744,
     "risk_drivers": [
-      "hour_of_day_at_snapshot",
-      "hour_of_day_submitted"
+      "resource_at_reviewed",
+      "min_wait_hours_so_far"
     ],
     "feature_contributions": [
       {
         "feature": "elapsed_hours_so_far",
-        "contribution": 0.0036
+        "contribution": 0.0004
       },
       {
         "feature": "wait_before_reviewed_hours",
-        "contribution": 0.0067
+        "contribution": -0.0094
       },
       {
         "feature": "resource_at_reviewed",
-        "contribution": -0.013
+        "contribution": 0.0176
       },
       {
         "feature": "hour_of_day_submitted",
-        "contribution": 0.0399
+        "contribution": -0.0039
       },
       {
         "feature": "has_been_reworked_yet",
@@ -1305,90 +1305,90 @@
       },
       {
         "feature": "total_wait_hours_so_far",
-        "contribution": 0.0029
+        "contribution": -0.0133
       },
       {
         "feature": "average_wait_hours_so_far",
-        "contribution": 0.0099
+        "contribution": -0.0018
       },
       {
         "feature": "max_wait_hours_so_far",
-        "contribution": 0.0023
+        "contribution": -0.014
       },
       {
         "feature": "min_wait_hours_so_far",
-        "contribution": -0.0036
+        "contribution": 0.0039
       },
       {
         "feature": "number_of_long_waits_so_far",
-        "contribution": 0.0018
+        "contribution": -0.0074
       },
       {
         "feature": "time_since_previous_activity",
-        "contribution": -0.0004
+        "contribution": 0.0026
       },
       {
         "feature": "hour_of_day_at_snapshot",
-        "contribution": 0.0407
+        "contribution": -0.005
       },
       {
         "feature": "day_of_week_submitted",
-        "contribution": 0.0104
+        "contribution": -0.0274
       },
       {
         "feature": "day_of_week_at_snapshot",
-        "contribution": 0.0116
+        "contribution": -0.0249
       },
       {
         "feature": "is_weekend_submitted",
-        "contribution": 0.0023
+        "contribution": 0.0
       },
       {
         "feature": "resource_at_submitted",
-        "contribution": -0.0363
+        "contribution": -0.0038
       }
     ],
-    "base_value": 0.2418,
-    "explanation": "This case is flagged mainly because of hour_of_day_at_snapshot and hour_of_day_submitted.",
+    "base_value": 0.2494,
+    "explanation": "Case is on track with low risk contribution across resource_at_reviewed and min_wait_hours_so_far.",
     "prescriptive_action": {
-      "action_title": "Core-Hour Dispatch Priority",
-      "action_category": "DISPATCH_OPTIMIZE",
-      "current_risk": 0.321,
-      "projected_risk": 0.29,
-      "risk_reduction_pct": 3.1,
+      "action_title": "Maintain Standard Routing",
+      "action_category": "STANDARD_OPS",
+      "current_risk": 0.163,
+      "projected_risk": 0.163,
+      "risk_reduction_pct": 0.0,
       "feasibility": "HIGH",
-      "guidance": "Dispatch next task during peak business operating hours with SLA escalation flag (-3.1% Risk)."
+      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
     }
   },
   {
     "case_id": "OPEN-0020",
     "current_step": "Reviewed",
-    "late_risk_probability": 0.0336,
-    "predicted_label": "On Track",
-    "risk_label": "On Track",
+    "late_risk_probability": 0.2349,
+    "predicted_label": "Late Risk",
+    "risk_label": "Late Risk",
     "risk_threshold": 0.19,
     "anomaly_flag": false,
     "elapsed_hours_so_far": 3.2206,
     "risk_drivers": [
       "resource_at_reviewed",
-      "has_been_reworked_yet"
+      "max_wait_hours_so_far"
     ],
     "feature_contributions": [
       {
         "feature": "elapsed_hours_so_far",
-        "contribution": -0.0187
+        "contribution": -0.0018
       },
       {
         "feature": "wait_before_reviewed_hours",
-        "contribution": -0.0244
+        "contribution": 0.0052
       },
       {
         "feature": "resource_at_reviewed",
-        "contribution": 0.0038
+        "contribution": 0.0161
       },
       {
         "feature": "hour_of_day_submitted",
-        "contribution": -0.0099
+        "contribution": -0.0004
       },
       {
         "feature": "has_been_reworked_yet",
@@ -1412,59 +1412,59 @@
       },
       {
         "feature": "total_wait_hours_so_far",
-        "contribution": -0.0188
-      },
-      {
-        "feature": "average_wait_hours_so_far",
-        "contribution": -0.0187
-      },
-      {
-        "feature": "max_wait_hours_so_far",
-        "contribution": -0.0157
-      },
-      {
-        "feature": "min_wait_hours_so_far",
-        "contribution": -0.0229
-      },
-      {
-        "feature": "number_of_long_waits_so_far",
         "contribution": -0.0035
       },
       {
+        "feature": "average_wait_hours_so_far",
+        "contribution": 0.0054
+      },
+      {
+        "feature": "max_wait_hours_so_far",
+        "contribution": 0.0125
+      },
+      {
+        "feature": "min_wait_hours_so_far",
+        "contribution": 0.006
+      },
+      {
+        "feature": "number_of_long_waits_so_far",
+        "contribution": 0.0011
+      },
+      {
         "feature": "time_since_previous_activity",
-        "contribution": -0.0239
+        "contribution": 0.0078
       },
       {
         "feature": "hour_of_day_at_snapshot",
-        "contribution": -0.0195
+        "contribution": 0.0054
       },
       {
         "feature": "day_of_week_submitted",
-        "contribution": -0.0071
+        "contribution": -0.0429
       },
       {
         "feature": "day_of_week_at_snapshot",
-        "contribution": -0.0086
+        "contribution": -0.0342
       },
       {
         "feature": "is_weekend_submitted",
-        "contribution": -0.0011
+        "contribution": 0.0
       },
       {
         "feature": "resource_at_submitted",
-        "contribution": -0.0193
+        "contribution": 0.009
       }
     ],
-    "base_value": 0.2418,
-    "explanation": "Case is on track with low risk contribution across resource_at_reviewed and has_been_reworked_yet.",
+    "base_value": 0.2494,
+    "explanation": "This case is flagged mainly because of resource_at_reviewed and max_wait_hours_so_far.",
     "prescriptive_action": {
-      "action_title": "Maintain Standard Routing",
-      "action_category": "STANDARD_OPS",
-      "current_risk": 0.034,
-      "projected_risk": 0.034,
-      "risk_reduction_pct": 0.0,
+      "action_title": "Expedite Approval Step",
+      "action_category": "QUEUE_PRIORITY",
+      "current_risk": 0.235,
+      "projected_risk": 0.153,
+      "risk_reduction_pct": 8.2,
       "feasibility": "HIGH",
-      "guidance": "Case is operating within healthy cycle time boundaries. Continue standard execution."
+      "guidance": "Fast-track next approval queue. Cutting wait time to <=1h reduces late risk by 8.2%."
     }
   }
 ]
