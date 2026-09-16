@@ -219,6 +219,8 @@ def _check_insufficient_data(event_log_path: Path) -> tuple[bool, int]:
         return True, 0
 
 
+import subprocess
+
 async def _run_script_async(
     script: Path,
     run: PipelineRun,
@@ -227,15 +229,18 @@ async def _run_script_async(
     extra_args: Optional[list[str]] = None,
 ) -> bool:
     """
-    Run a Python script as an async subprocess inside work_dir.
+    Run a Python script as a subprocess inside work_dir.
     Features:
       - Explicit timeout with process termination
       - Non-zero exit code capture
       - Exception handling without exposing raw stack traces
-      - Streaming stdout/stderr
+      - Streaming stdout/stderr (compatible across all platforms and Windows event loops)
     """
     env = os.environ.copy()
     env["PYTHONPATH"] = str(PROJECT_ROOT)
+    env["CREWAI_TRACING_ENABLED"] = "false"
+    env["CREWAI_TELEMETRY_OPT_OUT"] = "true"
+    env["OTEL_SDK_DISABLED"] = "true"
     if os.path.isdir(GRAPHVIZ_BIN) and GRAPHVIZ_BIN not in env.get("PATH", ""):
         env["PATH"] = GRAPHVIZ_BIN + os.pathsep + env.get("PATH", "")
 
@@ -248,63 +253,72 @@ async def _run_script_async(
     start_prog, end_prog = PHASE_PROGRESS.get(phase, (0, 100))
     timeout = PHASE3_TIMEOUT if phase == "phase3" else SUBPROCESS_TIMEOUT
 
-    try:
-        proc = await asyncio.create_subprocess_exec(
-            *cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-            cwd=str(work_dir),
-            env=env,
-        )
-    except FileNotFoundError as fnf:
-        err_msg = f"Python executable or script not found: {fnf}"
-        logger.error(err_msg)
-        run.add_log(err_msg, "error")
-        run.error_message = err_msg
-        return False
-    except Exception as exc:
-        err_msg = f"Failed to spawn subprocess {script.name}: {exc}"
-        logger.exception(err_msg)
-        run.add_log(err_msg, "error")
-        run.error_message = err_msg
-        return False
+    loop = asyncio.get_running_loop()
 
-    async def read_stream(stream, level):
-        while True:
-            line = await stream.readline()
-            if not line:
-                break
-            text = line.decode("utf-8", errors="replace").rstrip()
-            if text:
-                run.add_log(text, level)
-
-    stream_tasks = asyncio.gather(
-        read_stream(proc.stdout, "info"),
-        read_stream(proc.stderr, "error"),
-    )
-
-    try:
-        # Enforce explicit timeout
-        await asyncio.wait_for(asyncio.gather(proc.wait(), stream_tasks), timeout=timeout)
-    except asyncio.TimeoutError:
-        logger.error(f"Process {script.name} in phase {phase} timed out after {timeout} seconds")
+    def run_process_sync():
         try:
-            proc.kill()
-        except Exception:
-            pass
-        err_msg = f"Phase {phase} timed out after {timeout} seconds"
-        run.add_log(err_msg, "error")
-        run.error_message = err_msg
-        return False
+            proc = subprocess.Popen(
+                cmd,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=str(work_dir),
+                env=env,
+                text=True,
+                errors="replace",
+                bufsize=1,
+            )
+        except FileNotFoundError as fnf:
+            return False, f"Python executable or script not found: {fnf}"
+        except Exception as exc:
+            return False, f"Failed to spawn subprocess {script.name}: {exc}"
+
+        def reader(pipe, level):
+            try:
+                for line in iter(pipe.readline, ""):
+                    text = line.rstrip()
+                    if text:
+                        loop.call_soon_threadsafe(run.add_log, text, level)
+            except Exception:
+                pass
+            finally:
+                pipe.close()
+
+        t_out = threading.Thread(target=reader, args=(proc.stdout, "info"), daemon=True)
+        t_err = threading.Thread(target=reader, args=(proc.stderr, "error"), daemon=True)
+        t_out.start()
+        t_err.start()
+
+        try:
+            retcode = proc.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            logger.error(f"Process {script.name} in phase {phase} timed out after {timeout} seconds")
+            try:
+                proc.kill()
+            except Exception:
+                pass
+            t_out.join(timeout=2)
+            t_err.join(timeout=2)
+            return False, f"Phase {phase} timed out after {timeout} seconds"
+
+        t_out.join(timeout=2)
+        t_err.join(timeout=2)
+
+        if retcode != 0:
+            return False, f"Process {script.name} exited with non-zero exit code {retcode}"
+
+        return True, None
+
+    try:
+        success, err_msg = await asyncio.to_thread(run_process_sync)
     except Exception as exc:
-        logger.exception(f"Unexpected error while waiting for {script.name}: {exc}")
+        logger.exception(f"Unexpected error while executing {script.name}: {exc}")
         err_msg = f"Unexpected error in {script.name}: {exc}"
         run.add_log(err_msg, "error")
         run.error_message = err_msg
         return False
 
-    if proc.returncode != 0:
-        err_msg = f"Process {script.name} exited with non-zero exit code {proc.returncode}"
+    if not success:
         logger.warning(err_msg)
         run.add_log(err_msg, "error")
         run.error_message = err_msg

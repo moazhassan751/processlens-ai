@@ -119,8 +119,32 @@ def sanitize_dataframe_for_csv(df) -> any:
     return df_clean
 
 
+COLUMN_CANDIDATES = {
+    "case_id": [
+        "case_id", "caseid", "case_num", "casenum", "case", "order_id", "orderid",
+        "order_num", "order_number", "ordernumber", "ticket_id", "ticketid",
+        "incident_id", "incidentid", "incident_number", "claim_id", "claimid",
+        "application_id", "applicationid", "app_id", "item_id", "id", "case:concept:name",
+    ],
+    "activity": [
+        "activity", "activity_name", "activityname", "event", "event_name",
+        "eventname", "concept:name", "task", "task_name", "taskname", "status",
+        "action", "step", "step_name", "stage",
+    ],
+    "timestamp": [
+        "timestamp", "time:timestamp", "time", "date", "datetime", "created_at",
+        "createdat", "start_time", "starttime", "event_time", "eventtime",
+        "occurred_at", "occurredat", "completed_at", "date_time", "ts",
+    ],
+    "resource": [
+        "resource", "org:resource", "user", "user_name", "username", "user_id",
+        "agent", "actor", "operator", "assigned_to", "assignee", "performer", "employee",
+    ],
+}
+
+
 def _validate_uploaded_csv(content: bytes, filename: str):
-    """Validate an uploaded CSV. Returns (ok: bool, errors: list[str], df_or_None)."""
+    """Validate and normalize an uploaded CSV. Returns (ok: bool, errors: list[str], df_or_None)."""
     import pandas as pd
 
     # 1. Empty content check
@@ -143,29 +167,78 @@ def _validate_uploaded_csv(content: bytes, filename: str):
     if df is None or len(df) == 0 or df.empty:
         return False, ["Dataset contains no valid event records"], None
 
-    # 4. Required columns
-    actual_cols = set(df.columns.astype(str).str.strip())
-    missing_cols = REQUIRED_COLUMNS - actual_cols
-    extra_cols = actual_cols - REQUIRED_COLUMNS
-
-    errors: list[str] = []
-    if missing_cols:
-        if len(missing_cols) == 1:
-            errors.append(f"Missing required column: {sorted(missing_cols)[0]}")
-        else:
-            errors.append(f"Missing required columns: {sorted(missing_cols)}")
-    if extra_cols:
-        errors.append(f"Extra columns not allowed: {sorted(extra_cols)}")
-
-    if errors:
-        return False, errors, None
-
+    # 4. Smart column detection & alias mapping
+    col_map_lower = {str(c).strip().lower(): str(c).strip() for c in df.columns}
     df.columns = df.columns.astype(str).str.strip()
+
+    detected: dict[str, str] = {}
+    for canon in ["case_id", "activity", "timestamp", "resource"]:
+        if canon in df.columns:
+            detected[canon] = canon
+        else:
+            for candidate in COLUMN_CANDIDATES.get(canon, []):
+                if candidate in col_map_lower:
+                    detected[canon] = col_map_lower[candidate]
+                    break
+
+    # Mandatory column check (case_id, activity, timestamp)
+    missing_mandatory = [c for c in ["case_id", "activity", "timestamp"] if c not in detected]
+    if missing_mandatory:
+        return False, [
+            f"Could not identify mandatory column(s): {', '.join(missing_mandatory)}. "
+            f"Available columns in file: {list(df.columns)}. "
+            f"Please ensure your dataset contains columns for Case ID, Activity, and Timestamp."
+        ], None
+
+    # Handle optional resource column
+    if "resource" not in detected:
+        logger.info("No resource column detected in uploaded CSV. Defaulting to 'SYSTEM'.")
+        df["resource"] = "SYSTEM"
+        detected["resource"] = "resource"
+
+    # Rename detected columns to canonical names
+    rename_dict = {
+        orig: canon for canon, orig in detected.items() if orig != canon
+    }
+    if rename_dict:
+        df = df.rename(columns=rename_dict)
+
+    # Reorder columns so canonical columns come first, followed by extra domain columns
+    canonical_order = ["case_id", "activity", "timestamp", "resource"]
+    extra_cols = [c for c in df.columns if c not in canonical_order]
+    df = df[canonical_order + extra_cols]
+
+    # Convert string columns and strip whitespace
+    df["case_id"] = df["case_id"].astype(str).str.strip()
+    df["activity"] = df["activity"].astype(str).str.strip()
+    df["resource"] = df["resource"].astype(str).str.strip().replace(r"^\s*$", "SYSTEM", regex=True)
+
+    # 5. Robust timestamp parsing & chronological sorting
+    try:
+        parsed_ts = pd.to_datetime(df["timestamp"], format="mixed", errors="coerce")
+    except Exception:
+        parsed_ts = pd.to_datetime(df["timestamp"], errors="coerce")
+
+    if parsed_ts.isna().all():
+        return False, [f"Unable to parse valid dates from timestamp column '{detected['timestamp']}'."], None
+
+    null_ts_count = int(parsed_ts.isna().sum())
+    if null_ts_count > 0:
+        bad_rows = [idx + 2 for idx in df[parsed_ts.isna()].index.tolist()[:10]]
+        return False, [
+            f"Found {null_ts_count} row(s) with invalid or unparseable timestamps (e.g. rows {bad_rows})."
+        ], None
+
+    df["timestamp"] = parsed_ts.dt.strftime("%Y-%m-%d %H:%M:%S")
+
+    # Sort chronologically within each case
+    df["_parsed_ts"] = parsed_ts
+    df = df.sort_values(by=["case_id", "_parsed_ts"]).drop(columns=["_parsed_ts"]).reset_index(drop=True)
 
     # Sanitize dataframe against formula injection before validation and persistence
     df = sanitize_dataframe_for_csv(df)
 
-    # 5. Run thorough validation using validate_data module
+    # 6. Run thorough validation using validate_data module
     root_str = str(PROJECT_ROOT)
     inserted = False
     if root_str not in sys.path:
@@ -187,12 +260,8 @@ def _validate_uploaded_csv(content: bytes, filename: str):
             for line in report.splitlines()
             if "[FAIL]" in line
         ]
-        # Ignore "Unexpected activities" for uploaded files as custom domain logs vary
-        content_errors = [
-            line for line in fail_lines if "Unexpected activities" not in line
-        ]
-        if content_errors:
-            return False, content_errors, None
+        if fail_lines:
+            return False, fail_lines, None
 
     return True, [], df
 
@@ -260,6 +329,7 @@ async def upload_event_log(
     logger.info(f"Accepted upload '{original_filename}' with {row_count} rows for project '{project_id}'")
 
     return {
+        "success": True,
         "accepted": True,
         "data_source": "uploaded",
         "filename": original_filename,

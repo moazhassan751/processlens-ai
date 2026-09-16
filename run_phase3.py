@@ -60,6 +60,11 @@ if gemini_api_key:
     os.environ["GEMINI_API_KEY"] = gemini_api_key
     os.environ["GOOGLE_API_KEY"] = gemini_api_key
 
+# Disable CrewAI interactive tracing prompts & telemetry to prevent stdin deadlocks
+os.environ["CREWAI_TRACING_ENABLED"] = "false"
+os.environ["CREWAI_TELEMETRY_OPT_OUT"] = "true"
+os.environ["OTEL_SDK_DISABLED"] = "true"
+
 # ---- CrewAI setup ----------------------------------------------------
 
 from crewai import Agent, Task, Crew, Process, LLM
@@ -169,7 +174,7 @@ def build_investigator_task(agent):
             "  resource's avg_wait_hours and case_count\n"
             "- REWORK: rework_rate_pct, most_common_rework_activity, "
             "  extra_hours_per_reworked_case, total_extra_hours_from_rework\n"
-            "- PREDICTIONS: late_risk_count, on_track_count, "
+            "- PREDICTIONS: total_open_cases, late_risk_count, on_track_count, "
             "  insufficient_data_count, avg_late_risk_probability\n\n"
             "Include ALL numbers exactly as returned by the tools."
         ),
@@ -212,7 +217,9 @@ def build_recommendation_task(agent, context_tasks, extra_context=""):
         "   at least one real number from the findings\n\n"
         "Rules:\n"
         "- Every single number, metric, or quantity you cite MUST come directly from the findings\n"
-        "- Do NOT invent, assume, or introduce arbitrary numbers, quotas, timelines, or quantities (e.g. do NOT say '10 cases', '5 days', or '20%') that do not appear in the findings\n"
+        "- NEVER invent, assume, or introduce arbitrary numbers, quotas, timelines, or quantities (e.g. do NOT say '10 cases', '5 days', or '20%') that do not appear in the findings\n"
+        "- NEVER predict or invent hypothetical future outcome numbers or calculated reduction claims (e.g. do NOT say 'will drop to X' or 'will save Y hours') unless that exact number appears explicitly in the findings\n"
+        "- All claims must cite ONLY real, historical metrics from the findings\n"
         "- Do NOT round numbers differently from how they appear in the findings\n"
         "- The recommendation must be actionable and specific\n"
     )
@@ -332,7 +339,7 @@ def run_crew_once(tools, inject_error=False, fast_mode=False):
                 "- BOTTLENECK: activity name, avg_wait_hours, delay_contribution\n"
                 "- RESOURCE COMPARISON: for the bottleneck activity, each resource's avg_wait_hours and case_count\n"
                 "- REWORK: rework_rate_pct, most_common_rework_activity, extra_hours_per_reworked_case, total_extra_hours_from_rework\n"
-                "- PREDICTIONS: late_risk_count, on_track_count, insufficient_data_count, avg_late_risk_probability\n\n"
+                "- PREDICTIONS: total_open_cases, late_risk_count, on_track_count, insufficient_data_count, avg_late_risk_probability\n\n"
                 "Include ALL numbers exactly as returned by the tools."
             ),
             expected_output=(
@@ -424,7 +431,9 @@ def run_retry(tools, rejection_reason, first_run_outputs):
             f"at least one real number from the findings\n\n"
             f"Rules:\n"
             f"- Every single number, metric, or quantity you cite MUST come directly from the findings above\n"
-            f"- Do NOT invent, assume, or introduce arbitrary numbers, quotas, timelines, or quantities (e.g. do NOT say '10 cases', '5 days', or '20%') that do not appear in the findings\n"
+            f"- NEVER invent, assume, or introduce arbitrary numbers, quotas, timelines, or quantities (e.g. do NOT say '10 cases', '5 days', or '20%') that do not appear in the findings\n"
+            f"- NEVER predict or invent hypothetical future outcome numbers or calculated reduction claims (e.g. do NOT say 'will drop to X' or 'will save Y hours') unless that exact number appears explicitly in the findings\n"
+            f"- All claims must cite ONLY real, historical metrics from the findings\n"
             f"- Do NOT round numbers differently from how they appear in the findings\n"
             f"- The recommendation must be actionable and specific\n"
         ),
@@ -582,6 +591,9 @@ def main():
     print("+" + "=" * 60 + "+", flush=True)
     print(f"  [OK] Saved to: explanation_output.json", flush=True)
     print(flush=True)
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os._exit(0)
 
 
 if __name__ == "__main__":
