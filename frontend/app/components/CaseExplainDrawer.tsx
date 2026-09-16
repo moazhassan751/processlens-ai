@@ -16,6 +16,7 @@ import {
   Lightbulb,
   Zap,
 } from "lucide-react";
+import { MarkdownRenderer } from "./MarkdownRenderer";
 
 export interface PrescriptiveAction {
   action_title: string;
@@ -35,6 +36,8 @@ interface CaseExplanationResponse {
   explanation: {
     summary: string;
     evidence: string[];
+    what_to_do?: string;
+    how_to_prevent?: string;
     recommendation: string;
   };
   prescriptive_action?: PrescriptiveAction;
@@ -269,8 +272,8 @@ export const CaseExplainDrawer: React.FC<CaseExplainDrawerProps> = ({
                     <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
                     Executive Summary
                   </h3>
-                  <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 text-sm text-slate-200 leading-relaxed">
-                    {data.explanation.summary}
+                  <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-200 leading-relaxed shadow-md">
+                    <MarkdownRenderer content={data.explanation.summary} />
                   </div>
                 </div>
 
@@ -345,14 +348,38 @@ export const CaseExplainDrawer: React.FC<CaseExplainDrawerProps> = ({
                   </div>
                 )}
 
-                {/* Recommended Mitigation Action */}
+                {/* What To Do: Immediate Remediation */}
                 <div className="space-y-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                    <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
-                    Recommended Action
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5 text-amber-400" />
+                    What To Do (Immediate Tactical Remediation)
                   </h3>
-                  <div className="p-4 rounded-xl bg-indigo-950/30 border border-indigo-500/30 text-sm text-indigo-200 leading-relaxed font-medium">
-                    {data.explanation.recommendation}
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-amber-950/20 to-slate-900/90 border border-amber-500/30 text-xs text-amber-100/90 leading-relaxed shadow-lg">
+                    <MarkdownRenderer
+                      content={
+                        data.explanation.what_to_do ||
+                        data.explanation.recommendation ||
+                        "Prioritize this case for immediate review."
+                      }
+                      accentColor="amber"
+                    />
+                  </div>
+                </div>
+
+                {/* How To Prevent: Root-Cause Prevention & Controls */}
+                <div className="space-y-2">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    How To Prevent (Systemic Process Controls)
+                  </h3>
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-950/20 to-slate-900/90 border border-emerald-500/30 text-xs text-emerald-100/90 leading-relaxed shadow-lg">
+                    <MarkdownRenderer
+                      content={
+                        data.explanation.how_to_prevent ||
+                        "Establish automated SLA thresholds at handoff and enforce mandatory intake validation to prevent rework cycles."
+                      }
+                      accentColor="emerald"
+                    />
                   </div>
                 </div>
               </>

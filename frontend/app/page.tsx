@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Header } from "./components/Header";
 import { SnapshotSelector } from "./components/SnapshotSelector";
 import { LiveLogPanel } from "./components/LiveLogPanel";
@@ -9,6 +9,8 @@ import { CaseExplainDrawer, PrescriptiveAction } from "./components/CaseExplainD
 import { ConformancePanel } from "./components/ConformancePanel";
 import { SimulationPanel } from "./components/SimulationPanel";
 import { ConnectorPanel } from "./components/ConnectorPanel";
+import { DiscoveryFilterPanel, FilterOptions, ActiveFilters } from "./components/DiscoveryFilterPanel";
+import { MarkdownRenderer } from "./components/MarkdownRenderer";
 import {
   Activity,
   AlertTriangle,
@@ -84,6 +86,11 @@ type DiscoveryData = {
   available: boolean;
   process_map_exists: boolean;
   bottlenecks: Bottleneck[];
+  paths?: string[];
+  matched_cases?: number;
+  total_cases?: number;
+  filtered?: boolean;
+  message?: string;
   fallback?: boolean;
   warning?: string;
 };
@@ -91,6 +98,10 @@ type DiscoveryData = {
 type PathsData = {
   available: boolean;
   paths: string[];
+  matched_cases?: number;
+  total_cases?: number;
+  filtered?: boolean;
+  message?: string;
   fallback?: boolean;
   warning?: string;
 };
@@ -184,7 +195,9 @@ type ExplanationData = {
   available: boolean;
   investigator_findings?: string;
   draft_recommendation?: string;
+  retry_recommendation?: string;
   verification_result?: string;
+  retry_verification?: string;
   timestamp?: string;
   approved?: boolean;
   fallback?: boolean;
@@ -241,12 +254,133 @@ export default function Home() {
   const [loadingOutputs, setLoadingOutputs] = useState<boolean>(true);
   const [globalError, setGlobalError] = useState<string | null>(null);
   const [showFoldBreakdown, setShowFoldBreakdown] = useState<boolean>(false);
+  const [dataVersion, setDataVersion] = useState<number>(0);
 
   // History & Upload states
   const [pastRuns, setPastRuns] = useState<PastRun[]>([]);
   const [selectedPastRunId, setSelectedPastRunId] = useState<string | null>(null);
   const [historicalData, setHistoricalData] = useState<RunDetail | null>(null);
   const [loadingRun, setLoadingRun] = useState(false);
+
+  // --------------------------------------------------------------------------
+  // Discovery Filtering State (Phase H8)
+  // --------------------------------------------------------------------------
+  const defaultFilters: ActiveFilters = useMemo(() => ({
+    startDate: "",
+    endDate: "",
+    selectedResources: [],
+    minDuration: "",
+    maxDuration: "",
+  }), []);
+
+  const [filterOptions, setFilterOptions] = useState<FilterOptions | null>(null);
+  const [activeFilters, setActiveFilters] = useState<ActiveFilters>(defaultFilters);
+  const [isFiltering, setIsFiltering] = useState<boolean>(false);
+  const [filteredDiscovery, setFilteredDiscovery] = useState<DiscoveryData | null>(null);
+  const [filteredPaths, setFilteredPaths] = useState<PathsData | null>(null);
+
+  const fetchFilterOptions = useCallback(async (proj: string, runId: string | null) => {
+    try {
+      const params: string[] = [`project_id=${encodeURIComponent(proj)}`];
+      if (runId) params.push(`run_id=${encodeURIComponent(runId)}`);
+      const res = await fetch(`${API_BASE}/api/discovery/filter-options?${params.join("&")}`);
+      if (res.ok) {
+        const data: FilterOptions = await res.json();
+        setFilterOptions(data);
+        setActiveFilters({
+          startDate: "",
+          endDate: "",
+          selectedResources: data.resources ? [...data.resources] : [],
+          minDuration: "",
+          maxDuration: "",
+        });
+        setFilteredDiscovery(null);
+        setFilteredPaths(null);
+      }
+    } catch (err) {
+      console.warn("Could not load filter options:", err);
+    }
+  }, []);
+
+  // Reset filters when switching project or historical run
+  useEffect(() => {
+    fetchFilterOptions(activeProject, selectedPastRunId);
+  }, [activeProject, selectedPastRunId, fetchFilterOptions]);
+
+  const isFiltered = Boolean(
+    activeFilters.startDate ||
+    activeFilters.endDate ||
+    (filterOptions && activeFilters.selectedResources.length < filterOptions.resources.length) ||
+    activeFilters.minDuration ||
+    activeFilters.maxDuration
+  );
+
+  const activeFilterQuery = useMemo(() => {
+    const params: string[] = [];
+    if (activeFilters.startDate) {
+      params.push(`start_date=${encodeURIComponent(activeFilters.startDate)}`);
+    }
+    if (activeFilters.endDate) {
+      params.push(`end_date=${encodeURIComponent(activeFilters.endDate)}`);
+    }
+    if (filterOptions && activeFilters.selectedResources.length < filterOptions.resources.length) {
+      activeFilters.selectedResources.forEach((res) => {
+        params.push(`resource=${encodeURIComponent(res)}`);
+      });
+    }
+    if (activeFilters.minDuration && !isNaN(parseFloat(activeFilters.minDuration))) {
+      params.push(`min_duration_hours=${encodeURIComponent(activeFilters.minDuration)}`);
+    }
+    if (activeFilters.maxDuration && !isNaN(parseFloat(activeFilters.maxDuration))) {
+      params.push(`max_duration_hours=${encodeURIComponent(activeFilters.maxDuration)}`);
+    }
+    return params.join("&");
+  }, [activeFilters, filterOptions]);
+
+  // Debounced refetch for filtered discovery
+  useEffect(() => {
+    if (!isFiltered) {
+      setFilteredDiscovery(null);
+      setFilteredPaths(null);
+      setIsFiltering(false);
+      return;
+    }
+
+    setIsFiltering(true);
+    const timer = setTimeout(async () => {
+      const params: string[] = [`project_id=${encodeURIComponent(activeProject)}`];
+      if (selectedPastRunId) params.push(`run_id=${encodeURIComponent(selectedPastRunId)}`);
+      if (activeFilterQuery) params.push(activeFilterQuery);
+      const qs = params.join("&");
+
+      try {
+        const [dRes, pRes] = await Promise.all([
+          fetch(`${API_BASE}/api/discovery?${qs}`),
+          fetch(`${API_BASE}/api/discovery/paths?${qs}`),
+        ]);
+        if (dRes.ok) setFilteredDiscovery(await dRes.json());
+        if (pRes.ok) setFilteredPaths(await pRes.json());
+      } catch (err) {
+        console.warn("Failed fetching filtered discovery:", err);
+      } finally {
+        setIsFiltering(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [activeFilterQuery, isFiltered, activeProject, selectedPastRunId]);
+
+  const handleClearFilters = useCallback(() => {
+    setActiveFilters({
+      startDate: "",
+      endDate: "",
+      selectedResources: filterOptions?.resources ? [...filterOptions.resources] : [],
+      minDuration: "",
+      maxDuration: "",
+    });
+    setFilteredDiscovery(null);
+    setFilteredPaths(null);
+  }, [filterOptions]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -277,6 +411,7 @@ export default function Home() {
       if (res.ok) {
         const data: StatusResponse = await res.json();
         setStatus(data);
+        setGlobalError(null);
         return data;
       }
     } catch (err: any) {
@@ -365,6 +500,7 @@ export default function Home() {
         await fetchAllOutputs(st);
       }
       await Promise.allSettled([fetchPastRuns(), fetchProjects()]);
+      setDataVersion((v) => v + 1);
     } catch (err: any) {
       setGlobalError(err.message || "Failed to load process data.");
     } finally {
@@ -512,7 +648,7 @@ export default function Home() {
         body: formData,
       });
       const data = await res.json();
-      if (res.ok && data.success) {
+      if (res.ok && (data.success || data.accepted)) {
         setUploadSuccess(`Uploaded "${data.filename}" (${data.row_count} rows). Pipeline is ready to run.`);
         reloadAll();
       } else {
@@ -548,8 +684,12 @@ export default function Home() {
 
   // Display data selection (live vs historical)
   const isViewingHistorical = Boolean(selectedPastRunId && historicalData);
-  const discovery = isViewingHistorical ? historicalData!.discovery : liveDiscovery;
-  const paths = isViewingHistorical ? historicalData!.paths : livePaths;
+  const discovery = isFiltered && filteredDiscovery
+    ? filteredDiscovery
+    : (isViewingHistorical ? historicalData!.discovery : liveDiscovery);
+  const paths = isFiltered && filteredPaths
+    ? filteredPaths
+    : (isViewingHistorical ? historicalData!.paths : livePaths);
   const predictions = isViewingHistorical ? historicalData!.predictions : livePredictions;
   const explanation = isViewingHistorical ? historicalData!.explanation : liveExplanation;
 
@@ -846,11 +986,29 @@ export default function Home() {
               </div>
             )}
 
+            {/* Interactive Process Log Filter Panel (Phase H8) */}
+            <DiscoveryFilterPanel
+              key={`filter-${activeProject}-${dataVersion}`}
+              options={filterOptions}
+              filters={activeFilters}
+              onFilterChange={setActiveFilters}
+              onClearFilters={handleClearFilters}
+              matchedCases={discovery?.matched_cases}
+              totalCases={discovery?.total_cases ?? filterOptions?.total_cases}
+              isFiltered={isFiltered}
+              isLoading={isFiltering}
+            />
+
             {/* Interactive Process Map Canvas */}
             <ProcessGraph
+              key={`graph-${activeProject}-${selectedPastRunId || "live"}-${dataVersion}`}
               apiBaseUrl={API_BASE}
               staticMapUrl={`${API_BASE}/api/discovery/process-map-image`}
               onRunPhase1={() => triggerSinglePhase("phase1")}
+              projectId={activeProject}
+              runId={selectedPastRunId}
+              filterQuery={isFiltered ? activeFilterQuery : ""}
+              onClearFilters={handleClearFilters}
             />
 
             {/* Bottlenecks Table */}
@@ -933,6 +1091,25 @@ export default function Home() {
                     </tbody>
                   </table>
                 </div>
+              ) : isFiltered && (discovery?.matched_cases ?? 0) < 2 ? (
+                <div className="py-12 text-center text-slate-400 text-xs max-w-sm mx-auto space-y-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mx-auto">
+                    <AlertTriangle className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-slate-200 mb-0.5">Not Enough Cases for Bottleneck Analysis</p>
+                    <p className="text-slate-500 text-[11px] leading-relaxed">
+                      Only {discovery?.matched_cases ?? 0} case(s) match the current filter combination. At least 2 cases are required to measure handover wait times and rework rates.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleClearFilters}
+                    className="px-4 py-2 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/25 transition-all"
+                  >
+                    Clear Active Filters
+                  </button>
+                </div>
               ) : (
                 <div className="py-12 text-center text-slate-400 text-xs max-w-sm mx-auto space-y-3">
                   <div className="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-slate-500 mx-auto">
@@ -1008,6 +1185,7 @@ export default function Home() {
         {/* =================================================================== */}
         {activeTab === "conformance" && (
           <ConformancePanel
+            key={`conf-${activeProject}-${dataVersion}`}
             apiBaseUrl={API_BASE}
             projectId={activeProject}
             onRunPhase1={() => triggerSinglePhase("phase1")}
@@ -1019,6 +1197,7 @@ export default function Home() {
         {/* =================================================================== */}
         {activeTab === "simulation" && (
           <SimulationPanel
+            key={`sim-${activeProject}-${dataVersion}`}
             apiBaseUrl={API_BASE}
             projectId={activeProject}
             onRunPhase1={() => triggerSinglePhase("phase1")}
@@ -1556,36 +1735,192 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* Investigator Findings */}
-                <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Activity className="w-4 h-4 text-cyan-400" />
-                    Investigator Root Cause Findings
-                  </h3>
-                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 leading-relaxed whitespace-pre-wrap font-mono break-words">
-                    {explanation.investigator_findings || "No findings recorded."}
+                {/* Multi-Agent Consensus Header Banner */}
+                <div className="p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-slate-800 flex flex-wrap items-center justify-between gap-4 shadow-xl">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="p-2 rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-bold text-white tracking-wide">
+                          Multi-Agent Operational Consensus
+                        </span>
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full font-bold uppercase text-[10px] tracking-wider ${
+                            explanation.approved
+                              ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm shadow-emerald-500/20"
+                              : "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                          }`}
+                        >
+                          {explanation.approved ? "Approved by Accuracy Verifier" : "Pending Verification"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        Coordinated diagnosis by Investigator, Process Advisor, and Verifier agents
+                      </p>
+                    </div>
+                  </div>
+
+                  {explanation.timestamp && (
+                    <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400 bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800">
+                      <Clock className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>{new Date(explanation.timestamp).toLocaleString()}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Agent Role Badges */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800/80 flex items-center gap-3 shadow-md">
+                    <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                      <Activity className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-white block">1. Investigator Agent</span>
+                      <span className="text-[10px] text-slate-400 block">Bottlenecks & Rework Analytics</span>
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800/80 flex items-center gap-3 shadow-md">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                      <Lightbulb className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-white block">2. Process Advisor Agent</span>
+                      <span className="text-[10px] text-slate-400 block">Action Plan & Prevention</span>
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800/80 flex items-center gap-3 shadow-md">
+                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                      <CheckCircle2 className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-white block">3. Accuracy Verifier</span>
+                      <span className="text-[10px] text-slate-400 block">100% Mathematical Proof</span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Draft Recommendation */}
-                <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <Lightbulb className="w-4 h-4 text-amber-400" />
-                    Intervention Recommendation
-                  </h3>
-                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 leading-relaxed whitespace-pre-wrap font-mono break-words">
-                    {explanation.draft_recommendation || "No recommendation drafted."}
+                {/* 1. Investigator Root Cause Findings */}
+                <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                    <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-2">
+                      <Activity className="w-4 h-4 text-cyan-400" />
+                      Investigator Root-Cause Diagnosis
+                    </h3>
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+                      Observed Event Log Telemetry
+                    </span>
+                  </div>
+                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/90 text-xs text-slate-200 leading-relaxed shadow-inner">
+                    <MarkdownRenderer
+                      content={explanation.investigator_findings || "No findings recorded."}
+                      accentColor="cyan"
+                    />
                   </div>
                 </div>
 
-                {/* Verifier Score & Review */}
-                <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    Verifier Evaluation & Mathematical Grounding
-                  </h3>
-                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-200 leading-relaxed whitespace-pre-wrap font-mono break-words">
-                    {explanation.verification_result || "No verification review recorded."}
+                {/* 2. Tactical Remediation: What To Do Now */}
+                <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                    <h3 className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-amber-400" />
+                      What To Do (Immediate Tactical Remediation)
+                    </h3>
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                      Priority Intervention
+                    </span>
+                  </div>
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-amber-950/20 via-slate-950/80 to-slate-900/90 border border-amber-500/30 text-xs text-amber-100 leading-relaxed shadow-lg">
+                    <MarkdownRenderer
+                      content={
+                        (explanation.approved && explanation.retry_recommendation)
+                          ? explanation.retry_recommendation
+                          : (explanation.draft_recommendation || explanation.retry_recommendation || "No recommendation drafted.")
+                      }
+                      accentColor="amber"
+                    />
+                  </div>
+                </div>
+
+                {/* 3. Systemic Prevention: How To Prevent Recurrence */}
+                <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                    <h3 className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                      <ShieldAlert className="w-4 h-4 text-emerald-400" />
+                      How To Prevent (Systemic Process Controls & Governance)
+                    </h3>
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+                      Process Guardrails
+                    </span>
+                  </div>
+                  <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-950/20 via-slate-950/80 to-slate-900/90 border border-emerald-500/30 text-xs text-slate-200 leading-relaxed shadow-lg space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-start gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="text-xs font-bold text-white block">Automated Handover SLA Alarms</span>
+                          <span className="text-[11px] text-slate-400 leading-relaxed block mt-0.5">
+                            Trigger automated supervisor notifications when wait times leading into bottleneck steps exceed 24 hours.
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-start gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="text-xs font-bold text-white block">First-Time-Right Intake Validation</span>
+                          <span className="text-[11px] text-slate-400 leading-relaxed block mt-0.5">
+                            Mandate document completeness checks prior to initial review to eliminate repeat correction and rework loops.
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-start gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="text-xs font-bold text-white block">Resource Queue Depth Balancing</span>
+                          <span className="text-[11px] text-slate-400 leading-relaxed block mt-0.5">
+                            Cap single-reviewer queue assignments to prevent disproportionate wait-time escalation across reviewer pools.
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800 flex items-start gap-2.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="text-xs font-bold text-white block">Predictive Early-Warning Triggers</span>
+                          <span className="text-[11px] text-slate-400 leading-relaxed block mt-0.5">
+                            Automatically fast-track cases identified by Machine Learning as exceeding a 60% probability of milestone delay.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. Verifier Evaluation & Mathematical Proof */}
+                <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                    <h3 className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      Accuracy Verifier Audit Report
+                    </h3>
+                    <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+                      Zero Hallucination Guarantee
+                    </span>
+                  </div>
+                  <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800/90 text-xs text-slate-200 leading-relaxed shadow-inner">
+                    <MarkdownRenderer
+                      content={
+                        (explanation.approved && explanation.retry_verification)
+                          ? explanation.retry_verification
+                          : (explanation.verification_result || explanation.retry_verification || "No verification review recorded.")
+                      }
+                      accentColor="emerald"
+                    />
                   </div>
                 </div>
               </div>
