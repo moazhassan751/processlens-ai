@@ -26,6 +26,7 @@ import {
   Sliders,
   CheckCircle2,
   ShieldAlert,
+  AlertTriangle,
   Image as ImageIcon
 } from "lucide-react";
 
@@ -114,14 +115,25 @@ interface ProcessGraphProps {
   apiBaseUrl?: string;
   staticMapUrl?: string | null;
   onRunPhase1?: () => void;
+  projectId?: string;
+  runId?: string | null;
+  filterQuery?: string;
+  filterMessage?: string | null;
+  onClearFilters?: () => void;
 }
 
 export const ProcessGraph: React.FC<ProcessGraphProps> = ({
   apiBaseUrl = "http://localhost:8000",
   staticMapUrl,
   onRunPhase1,
+  projectId = "default",
+  runId = null,
+  filterQuery = "",
+  filterMessage = null,
+  onClearFilters,
 }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -252,7 +264,13 @@ export const ProcessGraph: React.FC<ProcessGraphProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${apiBaseUrl}/api/process-graph`);
+      const params: string[] = [];
+      if (projectId) params.push(`project_id=${encodeURIComponent(projectId)}`);
+      if (runId) params.push(`run_id=${encodeURIComponent(runId)}`);
+      if (filterQuery) params.push(filterQuery);
+      const queryStr = params.length > 0 ? `?${params.join("&")}` : "";
+
+      const res = await fetch(`${apiBaseUrl}/api/process-graph${queryStr}`);
       if (res.status === 202) {
         setError("Event log not available yet. Please run the pipeline first.");
         return;
@@ -261,8 +279,18 @@ export const ProcessGraph: React.FC<ProcessGraphProps> = ({
         throw new Error(`Failed to load process graph (HTTP ${res.status})`);
       }
       const data = await res.json();
+      if (data.matched_cases !== undefined && data.matched_cases < 2) {
+        setError(data.message || "Not enough cases match these filters to discover a process");
+        setRawData(null);
+        setNodes([]);
+        setEdges([]);
+        return;
+      }
       if (!data.nodes || data.nodes.length === 0) {
-        setError("No process nodes discovered. Run Phase 1 to mine the graph.");
+        setError(data.message || "No process nodes discovered. Run Phase 1 to mine the graph.");
+        setRawData(null);
+        setNodes([]);
+        setEdges([]);
         return;
       }
 
@@ -278,7 +306,7 @@ export const ProcessGraph: React.FC<ProcessGraphProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [apiBaseUrl, setNodes, setEdges, showConformanceOverlay]);
+  }, [apiBaseUrl, projectId, runId, filterQuery, setNodes, setEdges, showConformanceOverlay]);
 
   useEffect(() => {
     loadGraph();
@@ -390,17 +418,39 @@ export const ProcessGraph: React.FC<ProcessGraphProps> = ({
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center h-full text-slate-400 p-8 text-center max-w-lg mx-auto">
-            <div className="w-12 h-12 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-indigo-400 mb-3 shadow-inner">
-              <GitCommit className="w-6 h-6" />
+            <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center mb-3 shadow-inner ${
+              error.includes("Not enough cases")
+                ? "bg-amber-500/10 border-amber-500/30 text-amber-400"
+                : "bg-slate-900 border-slate-800 text-indigo-400"
+            }`}>
+              {error.includes("Not enough cases") ? (
+                <AlertTriangle className="w-6 h-6" />
+              ) : (
+                <GitCommit className="w-6 h-6" />
+              )}
             </div>
-            <h4 className="text-sm font-bold text-white mb-1.5">Process Map Not Yet Available</h4>
+            <h4 className="text-sm font-bold text-white mb-1.5">
+              {error.includes("Not enough cases")
+                ? "Not enough cases match these filters to discover a process"
+                : "Process Map Not Yet Available"}
+            </h4>
             <p className="text-xs text-slate-400 leading-relaxed mb-6">
-              {error.includes("202") || error.includes("not available")
+              {error.includes("Not enough cases")
+                ? "Process mining discovery requires at least 2 distinct cases to compute directly-follows transitions and flow topology. Please widen your filter bounds or clear active filters."
+                : error.includes("202") || error.includes("not available")
                 ? "The event log has not been mined into a directed process topology yet. Execute Phase 1 (Discovery) to generate activity nodes, handover latencies, and bottleneck heatmaps."
                 : error}
             </p>
             <div className="flex items-center gap-3">
-              {onRunPhase1 && (
+              {error.includes("Not enough cases") && onClearFilters ? (
+                <button
+                  type="button"
+                  onClick={onClearFilters}
+                  className="px-4 py-2 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/25 transition-all"
+                >
+                  Clear Active Filters
+                </button>
+              ) : onRunPhase1 ? (
                 <button
                   type="button"
                   onClick={onRunPhase1}
@@ -408,7 +458,7 @@ export const ProcessGraph: React.FC<ProcessGraphProps> = ({
                 >
                   Run Phase 1 (Discovery)
                 </button>
-              )}
+              ) : null}
               <button
                 type="button"
                 onClick={loadGraph}
