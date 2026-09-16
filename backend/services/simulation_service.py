@@ -208,7 +208,7 @@ def simulate_scenario(
         if target_activity not in available_activities:
             raise ValueError(f"Selected activity '{target_activity}' does not exist in the active event log.")
 
-    if scenario_type == "rework_reduction" and target_activity and target_activity != "all":
+    if scenario_type == "rework_reduction" and target_activity and target_activity not in ["all", "all activities"]:
         if target_activity not in available_activities:
             raise ValueError(f"Selected activity '{target_activity}' does not exist in the active event log.")
 
@@ -216,7 +216,7 @@ def simulate_scenario(
         if "resource" not in df.columns:
             raise ValueError("Resource capacity scenario requires a 'resource' column in the event log.")
         available_resources = set(df["resource"].dropna().unique())
-        if target_resource and target_resource not in available_resources:
+        if target_resource and target_resource not in ["all", "all resources"] and target_resource not in available_resources:
             raise ValueError(f"Selected resource '{target_resource}' does not exist in the active event log.")
 
     # Compute baseline metrics
@@ -271,11 +271,11 @@ def simulate_scenario(
         ]
 
     elif scenario_type == "rework_reduction":
-        target_label = target_activity if (target_activity and target_activity != "all") else "all activities"
+        target_label = target_activity if (target_activity and target_activity not in ["all", "all activities"]) else "all activities"
         scenario_title = f"Rework Delay Reduction on {target_label} (-{reduction_pct:.1f}%)"
         component_name = f"Rework Delay Hours ({target_label})"
 
-        if target_activity and target_activity != "all":
+        if target_activity and target_activity not in ["all", "all activities"]:
             rework_rows = df[(df["activity"] == target_activity) & (df["act_occurrence"] > 0) & (df["wait_hours"].notna())]
         else:
             rework_rows = df[(df["act_occurrence"] > 0) & (df["wait_hours"].notna())]
@@ -333,7 +333,7 @@ def simulate_scenario(
         scale_ratio = 1.0 / (1.0 + cap_inc / 100.0)
         eff_reduction_factor = 1.0 - scale_ratio
 
-        if target_resource and target_resource != "all resources":
+        if target_resource and target_resource not in ["all", "all resources"]:
             res_rows = df[(df["resource"] == target_resource) & (df["wait_hours"].notna())]
         else:
             res_rows = df[df["wait_hours"].notna()]
@@ -347,7 +347,7 @@ def simulate_scenario(
 
         assumptions_text = (
             f"Assumes a {cap_inc:.1f}% capacity or staffing expansion for {target_res}. "
-            f"Under standard proportional service scaling, average wait times scale as W_base / (1 + ΔC). "
+            f"Under standard proportional service scaling, average wait times scale as W_base / (1 + delta_capacity). "
             f"No theoretical queue distribution is fabricated."
         )
         calculation_basis = [

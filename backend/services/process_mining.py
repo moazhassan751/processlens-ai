@@ -18,6 +18,7 @@ import pandas as pd
 
 from backend.config import OUTPUT_FILES, GRAPHVIZ_BIN
 
+
 logger = logging.getLogger("processlens.process_mining")
 
 
@@ -26,13 +27,163 @@ def _ensure_graphviz():
         os.environ["PATH"] = GRAPHVIZ_BIN + os.pathsep + os.environ.get("PATH", "")
 
 
-def compute_bottlenecks(event_log_path: Optional[Path] = None) -> list[dict]:
-    """Compute wait-time and rework metrics per activity."""
+def compute_filter_options(event_log_path: Optional[Path] = None) -> dict:
+    """
+    Compute dynamic filter boundary options from the active event log.
+    Returns:
+        {
+            "available": bool,
+            "resources": list[str],
+            "date_range": {"min": str, "max": str, "min_date": str, "max_date": str},
+            "duration_hours": {"min": float, "max": float},
+            "total_cases": int,
+        }
+    """
     p = event_log_path or OUTPUT_FILES["event_log"]
     if not p.exists():
-        return []
+        return {
+            "available": False,
+            "message": "event_log.csv not yet available.",
+            "resources": [],
+            "date_range": {"min": None, "max": None, "min_date": None, "max_date": None},
+            "duration_hours": {"min": 0.0, "max": 0.0},
+            "total_cases": 0,
+        }
 
     df = pd.read_csv(str(p))
+    if len(df) == 0:
+        return {
+            "available": True,
+            "resources": [],
+            "date_range": {"min": None, "max": None, "min_date": None, "max_date": None},
+            "duration_hours": {"min": 0.0, "max": 0.0},
+            "total_cases": 0,
+        }
+
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
+    distinct_resources = sorted([str(r).strip() for r in df["resource"].dropna().unique() if str(r).strip()])
+
+    case_summary = df.groupby("case_id").agg(
+        first_ts=("timestamp", "min"),
+        last_ts=("timestamp", "max"),
+    )
+    case_summary["duration_hours"] = (
+        (case_summary["last_ts"] - case_summary["first_ts"]).dt.total_seconds() / 3600.0
+    )
+
+    min_start_dt = case_summary["first_ts"].min()
+    max_start_dt = case_summary["first_ts"].max()
+    min_start = min_start_dt.isoformat() if pd.notna(min_start_dt) else None
+    max_start = max_start_dt.isoformat() if pd.notna(max_start_dt) else None
+
+    min_dur = round(float(case_summary["duration_hours"].min()), 2) if len(case_summary) > 0 else 0.0
+    max_dur = round(float(case_summary["duration_hours"].max()), 2) if len(case_summary) > 0 else 0.0
+
+    return {
+        "available": True,
+        "resources": distinct_resources,
+        "date_range": {
+            "min": min_start,
+            "max": max_start,
+            "min_date": min_start[:10] if min_start else None,
+            "max_date": max_start[:10] if max_start else None,
+        },
+        "duration_hours": {
+            "min": min_dur,
+            "max": max_dur,
+        },
+        "total_cases": int(len(case_summary)),
+    }
+
+
+def filter_event_log(
+    df: pd.DataFrame,
+    start_date: Optional[str] = None,
+    end_date: Optional[str] = None,
+    resources: Optional[list[str] | set[str] | str] = None,
+    min_duration_hours: Optional[float] = None,
+    max_duration_hours: Optional[float] = None,
+) -> tuple[pd.DataFrame, int, int]:
+    """
+    Filter event log by case-level criteria in-memory:
+    - start_date, end_date (ISO date strings): cases whose first event timestamp falls in range.
+    - resources: cases where at least one event was handled by one of the given resources.
+    - min_duration_hours, max_duration_hours: cases whose total cycle time falls in range.
+
+    Returns:
+        (filtered_df: pd.DataFrame, matched_cases: int, total_cases: int)
+    """
+    if len(df) == 0:
+        return df.copy(), 0, 0
+
+    df_work = df.copy()
+    df_work["timestamp"] = pd.to_datetime(df_work["timestamp"])
+    total_cases = int(df_work["case_id"].nunique())
+
+    # Build case-level aggregates
+    case_summary = df_work.groupby("case_id").agg(
+        first_ts=("timestamp", "min"),
+        last_ts=("timestamp", "max"),
+        res_set=("resource", lambda s: {str(x).strip() for x in s.dropna() if str(x).strip()}),
+    )
+    case_summary["duration_hours"] = (
+        (case_summary["last_ts"] - case_summary["first_ts"]).dt.total_seconds() / 3600.0
+    )
+
+    mask = pd.Series(True, index=case_summary.index)
+
+    if start_date and str(start_date).strip():
+        s_dt = pd.to_datetime(str(start_date).strip())
+        mask &= (case_summary["first_ts"] >= s_dt)
+
+    if end_date and str(end_date).strip():
+        e_str = str(end_date).strip()
+        e_dt = pd.to_datetime(e_str)
+        if len(e_str) == 10:
+            e_dt = e_dt + pd.Timedelta(days=1) - pd.Timedelta(microseconds=1)
+        mask &= (case_summary["first_ts"] <= e_dt)
+
+    if resources:
+        if isinstance(resources, str):
+            res_targets = {r.strip() for r in resources.split(",") if r.strip()}
+        else:
+            res_targets = set()
+            for item in resources:
+                for sub in str(item).split(","):
+                    if sub.strip():
+                        res_targets.add(sub.strip())
+        if res_targets:
+            mask &= case_summary["res_set"].apply(lambda s: bool(s.intersection(res_targets)))
+
+    if min_duration_hours is not None:
+        mask &= (case_summary["duration_hours"] >= float(min_duration_hours))
+
+    if max_duration_hours is not None:
+        mask &= (case_summary["duration_hours"] <= float(max_duration_hours))
+
+    matched_case_ids = set(case_summary[mask].index)
+    matched_cases = int(len(matched_case_ids))
+
+    filtered_df = df[df["case_id"].isin(matched_case_ids)].copy()
+    return filtered_df, matched_cases, total_cases
+
+
+def compute_bottlenecks(
+    event_log_path: Optional[Path] = None,
+    df: Optional[pd.DataFrame] = None,
+) -> list[dict]:
+    """Compute wait-time and rework metrics per activity."""
+    if df is None:
+        p = event_log_path or OUTPUT_FILES["event_log"]
+        if not p.exists():
+            return []
+        df = pd.read_csv(str(p))
+    else:
+        df = df.copy()
+
+    if len(df) == 0:
+        return []
+
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     df = df.sort_values(["case_id", "timestamp"]).reset_index(drop=True)
 
@@ -77,21 +228,30 @@ def compute_bottlenecks(event_log_path: Optional[Path] = None) -> list[dict]:
     return result.to_dict(orient="records")
 
 
-def compute_paths(event_log_path: Optional[Path] = None) -> list[str]:
+def compute_paths(
+    event_log_path: Optional[Path] = None,
+    df: Optional[pd.DataFrame] = None,
+) -> list[str]:
     """Discover process paths using pm4py Inductive Miner."""
     _ensure_graphviz()
-    p = event_log_path or OUTPUT_FILES["event_log"]
-    pm_path = OUTPUT_FILES.get("process_map")
+    if df is None:
+        p = event_log_path or OUTPUT_FILES["event_log"]
+        pm_path = OUTPUT_FILES.get("process_map")
 
-    if not p.exists():
-        return []
-    if pm_path and not pm_path.exists():
+        if not p.exists():
+            return []
+        if pm_path and not pm_path.exists():
+            return []
+        df = pd.read_csv(str(p))
+    else:
+        df = df.copy()
+
+    if len(df) == 0 or df["case_id"].nunique() < 2:
         return []
 
     try:
         import pm4py
 
-        df = pd.read_csv(str(p))
         df = df.rename(columns={
             "case_id": "case:concept:name",
             "activity": "concept:name",
@@ -169,7 +329,10 @@ def compute_paths(event_log_path: Optional[Path] = None) -> list[str]:
         return [f"(Could not extract paths: {exc})"]
 
 
-def compute_process_graph(event_log_path: Optional[Path] = None) -> dict:
+def compute_process_graph(
+    event_log_path: Optional[Path] = None,
+    df: Optional[pd.DataFrame] = None,
+) -> dict:
     """
     Compute an interactive process graph with node/edge statistics.
     Pure pandas — no LLM.
@@ -180,11 +343,17 @@ def compute_process_graph(event_log_path: Optional[Path] = None) -> dict:
             "edges": [{"source", "target", "frequency", "avg_duration_hours", "median_duration_hours", "is_bottleneck"}]
         }
     """
-    p = event_log_path or OUTPUT_FILES["event_log"]
-    if not p.exists():
+    if df is None:
+        p = event_log_path or OUTPUT_FILES["event_log"]
+        if not p.exists():
+            return {"nodes": [], "edges": []}
+        df = pd.read_csv(str(p))
+    else:
+        df = df.copy()
+
+    if len(df) == 0 or df["case_id"].nunique() < 2:
         return {"nodes": [], "edges": []}
 
-    df = pd.read_csv(str(p))
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     df = df.sort_values(["case_id", "timestamp"]).reset_index(drop=True)
 

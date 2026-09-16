@@ -15,7 +15,12 @@ from fastapi import APIRouter, Query
 from fastapi.responses import FileResponse, JSONResponse
 
 from backend.config import OUTPUT_FILES
-from backend.services.process_mining import compute_bottlenecks, compute_paths
+from backend.services.process_mining import (
+    compute_bottlenecks,
+    compute_paths,
+    compute_filter_options,
+    filter_event_log,
+)
 from backend.services.ml_service import compute_prediction_data
 from backend.services.data_quality import compute_data_quality
 from backend.services import storage as storage_svc
@@ -94,27 +99,106 @@ def get_data_quality(
 
 
 # ---------------------------------------------------------------------------
-# Discovery
+# Discovery & Filtering (Phase H8)
 # ---------------------------------------------------------------------------
+
+@router.get("/api/discovery/filter-options")
+def get_discovery_filter_options(
+    project_id: str = Query("default", description="Workspace project ID"),
+    run_id: Optional[str] = Query(None, description="Specific run ID"),
+):
+    """Return available filter options (resources, date range, duration bounds) from active event log."""
+    log_path, is_fallback = storage_svc.resolve_artifact_path(project_id, run_id, "event_log")
+    if not log_path or not log_path.exists():
+        return _not_available("event_log.csv")
+    try:
+        opts = compute_filter_options(log_path)
+        opts["fallback"] = is_fallback
+        if is_fallback:
+            opts["warning"] = storage_svc.FALLBACK_WARNING
+        return opts
+    except Exception as exc:
+        return JSONResponse(status_code=500, content={"error": str(exc)})
+
 
 @router.get("/api/discovery")
 def get_discovery(
     project_id: str = Query("default", description="Workspace project ID"),
     run_id: Optional[str] = Query(None, description="Specific run ID"),
+    start_date: Optional[str] = Query(None, description="Filter: start date ISO string"),
+    end_date: Optional[str] = Query(None, description="Filter: end date ISO string"),
+    resource: Optional[list[str]] = Query(None, description="Filter: resource (repeatable or comma-separated)"),
+    min_duration_hours: Optional[float] = Query(None, description="Filter: min cycle time in hours"),
+    max_duration_hours: Optional[float] = Query(None, description="Filter: max cycle time in hours"),
 ):
-    """Return the bottleneck table as JSON."""
+    """Return the bottleneck table as JSON, with optional in-memory case filtering."""
     log_path, is_log_fallback = storage_svc.resolve_artifact_path(project_id, run_id, "event_log")
     if not log_path or not log_path.exists():
         return _not_available("event_log.csv")
+
+    has_filters = any([
+        bool(start_date and str(start_date).strip()),
+        bool(end_date and str(end_date).strip()),
+        bool(resource),
+        min_duration_hours is not None,
+        max_duration_hours is not None,
+    ])
+
+    map_path, is_map_fallback = storage_svc.resolve_artifact_path(project_id, run_id, "process_map")
+    is_fallback = is_log_fallback or (is_map_fallback if run_id else False)
+
+    if has_filters:
+        try:
+            import pandas as pd
+            raw_df = pd.read_csv(str(log_path))
+            filtered_df, matched_cases, total_cases = filter_event_log(
+                raw_df,
+                start_date=start_date,
+                end_date=end_date,
+                resources=resource,
+                min_duration_hours=min_duration_hours,
+                max_duration_hours=max_duration_hours,
+            )
+            if matched_cases < 2:
+                res = {
+                    "available": True,
+                    "process_map_exists": False,
+                    "bottlenecks": [],
+                    "paths": [],
+                    "matched_cases": matched_cases,
+                    "total_cases": total_cases,
+                    "filtered": True,
+                    "message": "Not enough cases match these filters to discover a process",
+                    "fallback": is_fallback,
+                }
+            else:
+                bottlenecks = compute_bottlenecks(df=filtered_df)
+                paths = compute_paths(df=filtered_df)
+                res = {
+                    "available": True,
+                    "process_map_exists": map_path is not None and map_path.exists(),
+                    "bottlenecks": bottlenecks,
+                    "paths": paths,
+                    "matched_cases": matched_cases,
+                    "total_cases": total_cases,
+                    "filtered": True,
+                    "fallback": is_fallback,
+                }
+            if is_fallback:
+                res["warning"] = storage_svc.FALLBACK_WARNING
+            return res
+        except Exception as exc:
+            return JSONResponse(
+                status_code=500, content={"error": f"Failed to compute filtered discovery: {exc}"}
+            )
+
+    # Unfiltered baseline path: byte-for-byte identical
     try:
         bottlenecks = compute_bottlenecks(log_path)
     except Exception as exc:
         return JSONResponse(
             status_code=500, content={"error": f"Failed to compute bottlenecks: {exc}"}
         )
-
-    map_path, is_map_fallback = storage_svc.resolve_artifact_path(project_id, run_id, "process_map")
-    is_fallback = is_log_fallback or (is_map_fallback if run_id else False)
 
     res = {
         "available": True,
@@ -131,8 +215,13 @@ def get_discovery(
 def get_discovery_paths(
     project_id: str = Query("default", description="Workspace project ID"),
     run_id: Optional[str] = Query(None, description="Specific run ID"),
+    start_date: Optional[str] = Query(None, description="Filter: start date ISO string"),
+    end_date: Optional[str] = Query(None, description="Filter: end date ISO string"),
+    resource: Optional[list[str]] = Query(None, description="Filter: resource (repeatable or comma-separated)"),
+    min_duration_hours: Optional[float] = Query(None, description="Filter: min cycle time in hours"),
+    max_duration_hours: Optional[float] = Query(None, description="Filter: max cycle time in hours"),
 ):
-    """Return discovered path variants from event_log.csv."""
+    """Return discovered path variants from event_log.csv, with optional filtering."""
     log_path, is_log_fallback = storage_svc.resolve_artifact_path(project_id, run_id, "event_log")
     if not log_path or not log_path.exists():
         return _not_available("event_log.csv")
@@ -141,6 +230,53 @@ def get_discovery_paths(
         return _not_available("process_map.png (Phase 1 not fully complete)")
 
     is_fallback = is_log_fallback or (is_map_fallback if run_id else False)
+
+    has_filters = any([
+        bool(start_date and str(start_date).strip()),
+        bool(end_date and str(end_date).strip()),
+        bool(resource),
+        min_duration_hours is not None,
+        max_duration_hours is not None,
+    ])
+
+    if has_filters:
+        try:
+            import pandas as pd
+            raw_df = pd.read_csv(str(log_path))
+            filtered_df, matched_cases, total_cases = filter_event_log(
+                raw_df,
+                start_date=start_date,
+                end_date=end_date,
+                resources=resource,
+                min_duration_hours=min_duration_hours,
+                max_duration_hours=max_duration_hours,
+            )
+            if matched_cases < 2:
+                res = {
+                    "available": True,
+                    "paths": [],
+                    "matched_cases": matched_cases,
+                    "total_cases": total_cases,
+                    "filtered": True,
+                    "message": "Not enough cases match these filters to discover a process",
+                    "fallback": is_fallback,
+                }
+            else:
+                path_strings = compute_paths(df=filtered_df)
+                res = {
+                    "available": True,
+                    "paths": path_strings,
+                    "matched_cases": matched_cases,
+                    "total_cases": total_cases,
+                    "filtered": True,
+                    "fallback": is_fallback,
+                }
+            if is_fallback:
+                res["warning"] = storage_svc.FALLBACK_WARNING
+            return res
+        except Exception as exc:
+            return JSONResponse(status_code=500, content={"error": str(exc)})
+
     try:
         path_strings = compute_paths(log_path)
     except Exception as exc:
@@ -149,6 +285,7 @@ def get_discovery_paths(
     if is_fallback:
         res["warning"] = storage_svc.FALLBACK_WARNING
     return res
+
 
 
 @router.get("/api/discovery/map")
