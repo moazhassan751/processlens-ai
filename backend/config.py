@@ -86,3 +86,11 @@ PHASE3_TIMEOUT = int(os.environ.get("PHASE3_TIMEOUT", "300"))
 # API Key Protection (Phase H6)
 API_KEY: Optional[str] = os.environ.get("API_KEY", "").strip() or None
 
+# CORS Configuration
+_raw_cors = os.environ.get("CORS_ORIGINS", "").strip()
+CORS_ORIGINS: list[str] = [
+    origin.strip()
+    for origin in _raw_cors.split(",")
+    if origin.strip()
+] if _raw_cors else []
+

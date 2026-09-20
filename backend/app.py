@@ -37,14 +37,20 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
 
+    from backend.config import CORS_ORIGINS
+
+    allowed_origins = list({
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:3100",
+        "http://127.0.0.1:3100",
+        *CORS_ORIGINS,
+    })
+
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[
-            "http://localhost:3000",
-            "http://127.0.0.1:3000",
-            "http://localhost:3100",
-            "http://127.0.0.1:3100",
-        ],
+        allow_origins=allowed_origins,
+        allow_origin_regex=r"https://.*\.vercel\.app",
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
